@@ -28,16 +28,21 @@ If you would rather use something other than Visual Studio
 __Note:__ this isn't the only way to accomplish this, however; this is what the project's tests are expecting. Implimenting this in a different way will likely result in being marked as incomplete / incorrect.
 
 - [ ] Creating ASP.NET Core Application from scratch
-	- [ ] Add Middleware to Startup.cs
+	- [ ] Add Middleware/Configuration to Startup.cs
 		- [ ] Add Static File support
 			- Add UseStaticFiles to Configure.
 		- [ ] Add MVC support
 			- Add AddMVC to ConfigureServices.
 			- Add UseMVC to Configure.
+				- Provide UseMVC with default Controller/Action/Id Route (defaulting to Home/Index)
 		- [ ] Add EntityFramework support
 			- Add DbContext to ConfigureServices.
+			- Set to use Local SqlLite database
+				- InMemory when running in testing / dev ?
 		- [ ] Add Authentication support
 			- Add AddIdentity to ConfigureServices.
+				- Use EntityFrameworkStorers
+				- Use DefaultTokenProviders
 			- Add UseAuthentication to Configure.
 		- [ ] Setup Error Pages
 			- Add IsDevelopment Condition to Configure
@@ -45,4 +50,26 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
 				- If Not Development Add UseExceptionHandler and point it to Home/Error.cshtml
 		- [ ] Setup Development Envirornment
 			- Add envirornment type to launchsettings.json or WishList.csproj
-
+	- [ ] Add HomeController and Views
+		- [ ] Add Generic Welcome View
+			- Create a new Folder "Home" in the "Views" folder
+			- Create a new View "Index" in the "Home" folder
+				- This view should simply welcome the user to the WishList Application.
+		- [ ] Add Error View
+			- Create a new Folder "Views"
+			- Create a new Folder "Shared" in the "Views" folder
+			- Create a new View in the Shared Folder named "Error"
+				- This view should simply say "An Error has occurred. Please Try again."
+		- [ ] Create HomeController
+			- Create a new Folder "Controllers"
+			- Create a new Controller "HomeController" inside the "Controllers" folder
+			- Create a new Action "Index" in the HomeController
+				- This action should return an ActionResult
+				- The return statement should be a View
+			- Create a new Action "Error" in the HomeController
+				- This action should return an ActionResult
+				- The return statement should be a View
+	- [ ] Setup Basic Authentication
+		- [ ] Create "RegisterViewModel"
+		
+			
