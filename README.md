@@ -49,13 +49,14 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
 ### Project 1 Plan ###
 - [ ] Creating ASP.NET Core Application from scratch
 	- [ ] Add Middleware/Configuration to Startup.cs
-		- [ ] Add Static File support
-			- Add UseStaticFiles to Configure.
 		- [ ] Add MVC support
 			- Add AddMVC to ConfigureServices.
 			- Add UseMVC to Configure.
 				- Provide UseMVC with default Controller/Action/Id Route (defaulting to Home/Index)
 		- [ ] Add EntityFramework support
+			- Create class ApplicationDbContext that inherits DbContext
+				- Create the required constructor that accepts DbContextOptions<ApplicationDbContext>
+				- Add the required Base Invokation
 			- Add DbContext to ConfigureServices.
 			- Set to use Local SqlLite database
 				- InMemory when running in testing / dev ?
@@ -69,7 +70,7 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
 				- If Development add UseBrowserLink, UseDeveloperExceptionPage, and UseDatabaseErrorPage
 				- If Not Development Add UseExceptionHandler and point it to Home/Error.cshtml
 		- [ ] Setup Development Envirornment
-			- Add envirornment type to launchsettings.json or WishList.csproj
+			- Add envirornment type to WishList.csproj
 	- [ ] Add HomeController and Views
 		- [ ] Add Generic Welcome View
 			- Create a new Folder "Home" in the "Views" folder
