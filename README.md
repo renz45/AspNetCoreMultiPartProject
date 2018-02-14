@@ -19,14 +19,34 @@ If you would rather use something other than Visual Studio
 
 # Project Goals
 
-- Create the ability for users to create a wishlist
-- Create the ability for other users to view and mark items as purchased on the wish list
-- Create the ability to remove items from your wishlist
+- Project 1 (Runs through creating an ASP.NET application including adding, configuring, etc middleware, dependency injection, model, view, controller, simple routing, etc)
+	- Create the ability to view your wishlist
+	- Create the ability add items to your wish list
+	- Create the ability to remove items from your wishlist
+- Project 2 (Runs through authentication and the necessary supporting functionality)
+	- Create the ability to create account
+	- Create the ability to login to an account
+	- Create the ability to recover lost passwords
+	- Create the ability to change your password
+	- Associate Wishlists with a user
+	- Add authentication to wishlist functionality so only the owner can view / add / delete from a wishlist
+- Project 3 (Runs through more advanced view functionality like view templates, sections, layouts, etc. Also expands on controller functionality)
+	- Add ability to authorize other users to view your wishlist
+	- Add ability to deauthorize other users from viewing your wishlist
+	- Unauthorizing a user should wipe out all outstanding reservations
+	- Add ability to "reserve" / "unreserve" as item on a wishlist
+	- Create template for item for owner that allows add/deleting items (but doesn't show reservation status)
+	- Create template for item for authorized user that allows reserving an item
+	- Add ability to "unreserve" an item if you're the user who authorized user
+- Project  (Runs through request types, returning different data types, http statuses, and basic webservice security)
+	- Change project to utilize a webservice (webapi) for it's backend
+	- Secure webservice
 
 ## Tasks necessary to complete implimentation:
 
 __Note:__ this isn't the only way to accomplish this, however; this is what the project's tests are expecting. Implimenting this in a different way will likely result in being marked as incomplete / incorrect.
 
+### Project 1 Plan ###
 - [ ] Creating ASP.NET Core Application from scratch
 	- [ ] Add Middleware/Configuration to Startup.cs
 		- [ ] Add Static File support
@@ -69,6 +89,24 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
 			- Create a new Action "Error" in the HomeController
 				- This action should return an ActionResult
 				- The return statement should be a View
+		- [ ] Create a new Folder "Models"
+			- Create a new class "Item" in folder "Models"
+				- This class should have an public int "Id" and a public string "Description"
+			- Add the "Item" class to ApplicationDbContext
+		- [ ] Create a new Controller "WishListController" inside the "Controllers" folder
+			- Create a new Action "Index" in the WishListController
+				- This action should select get all Items and return them to the view
+			- Create a new Action "Create" in the WishListController
+				- This action should add a new Item to Items then redirect to the Index action
+			- Create a new Action "Delete" in the WishListController
+				- This action should remove an Item with the matching Id then redirect to the Index Action
+		- [ ] Create a new folder "WishList" in the Views folder
+			- Create a new View "Index" in the WishList folder
+				- This view should accept a model of List<Item>
+				- It should use a foreach loop to add rows that will have the Item description with a link to the delete action next to it
+				- It should have a form containing a description text box and an submit button
+
+### Project 2 Plan ###
 	- [ ] Setup Basic Authentication
 		- [ ] Create "RegisterViewModel"
 		
