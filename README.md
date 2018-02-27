@@ -38,8 +38,8 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
 	- [ ] Add Middleware/Configuration to `Startup.cs`
 		- [ ] In the `Startup.cs` file add support for the MVC middleware and configure it to have a default route.
 			- In the `ConfigureServices` method call `AddMVC` on `services` to add support for MVC middleware.
-			- In the `Configure` method call `UseMVC` on `app`.
-				- Provide `UseMVC` with default Controller/Action/Id Route (defaulting to the "Home" controller and "Index" action and `Id` being optional) (_Note_ : The `HomeController` doesn't exist yet, we'll make it soon)
+			- In the `Configure` method replace the `app.Run` call with a call to `UseMVC` on `app`.
+				- In `UseMVC`'s arguments call `MapRoute` with a name of "default" and a template of "{controller=Home}/{action=Index}/{id?}")" (_Note_ : The `HomeController` doesn't exist yet, we'll make it soon)
 		- [ ] In the `Startup.cs` file add support for developer exception pages and user friendly error pages.
 			- In the `Configure` method before `UseMVC` update the condition that checks if `env` is set to "Developement" using `IsDevelopement`.
 				- If Development it should call `UseBrowserLink`, `UseDeveloperExceptionPage`, and `UseDatabaseErrorPage` on `app` to get better detailed error pages.
