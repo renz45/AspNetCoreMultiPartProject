@@ -35,61 +35,83 @@ If you would rather use something other than Visual Studio
 __Note:__ this isn't the only way to accomplish this, however; this is what the project's tests are expecting. Implimenting this in a different way will likely result in being marked as incomplete / incorrect.
 
 - [ ] Creating ASP.NET Core Application from scratch
-	- [ ] Add Middleware/Configuration to Startup.cs
-		- [ ] Add MVC support
-			- Add AddMVC to ConfigureServices.
-			- Add UseMVC to Configure.
-				- Provide UseMVC with default Controller/Action/Id Route (defaulting to Home/Index)
-		- [ ] Add EntityFramework support
-			- Create class ApplicationDbContext that inherits DbContext
-				- Create the required constructor that accepts DbContextOptions<ApplicationDbContext>
-				- Add the required Base Invokation
-			- Add DbContext to ConfigureServices.
-			    - Set to use InMemoryDatabase
-		- [ ] Setup Error Pages
-			- Add IsDevelopment Condition to Configure
-				- If Development add UseBrowserLink, UseDeveloperExceptionPage, and UseDatabaseErrorPage
-				- If Not Development Add UseExceptionHandler and point it to Home/Error.cshtml
-		- [ ] Setup Development Environment
-			- Add environment type to WishList.csproj
-                - Set it to "Development"
-	- [ ] Add HomeController and Views
-		- [ ] Add Generic Welcome View
-			- Create a new Folder "Home" in the "Views" folder
-			- Create a new View "Index" in the "Home" folder
-				- This view should simply welcome the user to the WishList Application.
-		- [ ] Add Error View
-			- Create a new Folder "Views"
-			- Create a new Folder "Shared" in the "Views" folder
-			- Create a new View in the Shared Folder named "Error"
-				- This view should simply say "An Error has occurred. Please Try again."
-		- [ ] Create HomeController
-			- Create a new Folder "Controllers"
-			- Create a new Controller "HomeController" inside the "Controllers" folder
-			- Create a new Action "Index" in the HomeController
-				- This action should return an ActionResult
-				- The return statement should be a View
-			- Create a new Action "Error" in the HomeController
-				- This action should return an ActionResult
-				- The return statement should be a View
-		- [ ] Create a new Folder "Models"
-			- Create a new class "Item" in folder "Models"
-				- This class should have an public int "Id" and a public string "Description"
-			- Add the "Item" class to ApplicationDbContext
-		- [ ] Create a new Controller "WishListController" inside the "Controllers" folder
-			- Create a new Action "Index" in the WishListController
-				- This action should select get all Items and return them to the view
-			- Create a new Action "Create" in the WishListController
-				- This action should add a new Item to Items then redirect to the Index action
-			- Create a new Action "Delete" in the WishListController
-				- This action should remove an Item with the matching Id then redirect to the Index Action
-		- [ ] Create a new folder "WishList" in the Views folder
-			- Create a new View "Index" in the WishList folder
-				- This view should accept a model of List<Item>
-				- It should use a foreach loop to add rows that will have the Item description with a link to the delete action next to it
-				- It should have a form containing a description text box and an submit button
-        - [ ] Add a Link to the WishList's Index action to the Home Index view.
-            - Add link to the WishList's Index action below the p tag.
+	- [ ] Add Middleware/Configuration to `Startup.cs`
+		- [ ] In the `Startup.cs` file add support for the MVC middleware and configure it to have a default route.
+			- In the `ConfigureServices` method add `AddMVC` to add support for MVC middleware.
+			- In the `Configure` method add `UseMVC`.
+				- Provide `UseMVC` with default Controller/Action/Id Route (defaulting to the "Home" controller and "Index" action and `Id` being optional) (_Note_ : The `HomeController` doesn't exist yet, we'll make it soon)
+		- [ ] In the `Startup.cs` file add support for developer exception pages and user friendly error pages.
+			- In the `Configure` method before `UseMVC` setup a condition to check if `env` is set to "Developement" using `IsDevelopement`.
+				- If Development add `UseBrowserLink`, `UseDeveloperExceptionPage`, and `UseDatabaseErrorPage` to get better detailed error pages.
+				- If Not Development Add `UseExceptionHandler` and point it to "Home/Error" to provide a generic "An Error Has Occurred" page. (_Note_ : the Error page doesn't exist yet, we'll make it soon)
+	- [ ] Create `HomeController` and "Home"" Views
+		- [ ] Create a Generic Welcome View
+			- Create a new view "Index" in the "WishList/Views/Home" folder. (you will need to make some of these folders)
+            - The "Index" View should contain an `H1` tag welcoming the user.
+		- [ ] Create a Generic Error View
+			- Create a new view "Error" in the "WishList/Views/Shared" folder. (you will need to make some of these folders)
+				- This view should contain a `p` tag sayisc "An Error has occurred. Please Try again."
+		- [ ] Create the `HomeController`
+			- Create a new Controller "HomeController" inside the "Controllers" folder (you might need to create this folder)
+			- Create a new Action `Index` in the `HomeController`
+				- This action should have a return type of `ActionResult`.
+				- The return statement should return the "Index" view.
+			- Create a new Action `Error` in the `HomeController`
+				- This action should have a return type of `ActionResult`.
+				- The return statement should return the "Error" view.
+    - [ ] Impliment Basic WishList Functionality
+        - [ ] Add `EntityFramework` support
+            - Create a class `ApplicationDbContext` that inherits the `DbContext` class in the "WishList/Data" folder. (you will need to make some of these folders) (_Note_ : `DbContext` exists in the `Microsoft.EntityFrameWorkCore` namespace)
+                - Create the required constructor that accepts a parameter of type `DbContextOptions<ApplicationDbContext>` named `options`.
+                - Add the base Invocation after the constructor signature using `: base(options)`.
+            - In the `Startup` class's `Configure` method add `EntityFramework` support.
+                - Use `AddDbContext<ApplicationDbContext>` to point `EntityFramework` to the application's `DbContext`.
+                - Provide the option `UseInMemoryDatabase` to use an in memory database for the time being. 
+		- [ ] Create the `Item` model.
+			- Create a new class `Item` in the "WishList/Models" folder (You might need to create this folder)
+				- This class should contain a public property `Id` of type `int`.
+                - This class should contain a public property `Description` of type `string`.
+                - The `Description` property should have attributes of `Required` and `StringLength(50)`. (_Note_ : You'll need to add a using statement for `System.CompenentModel.DataAnnotations`.)
+			- In the `ApplicationDbContext` class add new public property `Items` of type `DbSet<Item>`.
+		- [ ] Create a new Controller `ItemController` inside the `Controllers` folder
+            - Create a private readonly property `_context` of type `ApplicationDbContext`. (Do not instantiate it at this time)
+            - Create a new constructor that accepts a parameter of type `ApplicationDbContext`
+                - This constructor should set `_context` to the provided `ApplicationDbContext` parameter.
+			- Create a new Action `Index` in the `ItemController`.
+				- This action should have a return type of `ActionResult`.
+                - This action should return the item's "Index" view. (_Note_ : The item's Index view doesn't exist yet, we'll make it soon.)
+                - This action should provide the "Index" view with a model of type `List<Item>` that contains all items in `_context.Items`.
+			- Create a new Action `Create` in the `ItemController`.
+                - This action should accept a parameter of type `Item`.
+                - This action should have a return type of `ActionResult`.
+                - This action should add the provided `Item` to `_context.Items` (_Note_ : Don't forget to `SaveChanges`!)
+				- This action should redirect to the `Index` action.
+			- Create a new Action `Delete` in the `ItemController`.
+                - This action should return a type of `ActionResult`.
+                - This action should remove the `Item` with the matching `Id` property from `_context.Items`. (_Note_ : Don't forget to `SaveChanges`!)
+                - This action should redirect to the `Index` action.
+        - [ ] Add support for Tag Helpers and Layout
+            - Create a New View "_ViewImports" in the "WishList/Views" folder.
+                - This view should contain `@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers`.
+            - Create a New View "_ViewStart" in the "WishList/Views" folder.
+                - This view should contain `@{ Layout = "_Layout"; }`. (_Note_ : We've provided a very basic layout for you, this layout contains some basic CSS and Jquery.)
+		- [ ] Create the Item's "Index" View
+			- Create a new View "Index" in the "WishList/Views/Item" folder (You will need to make some of these folders)
+				- This view should use a model of `List<Item>`.
+                - This view should have an `h1` tag containing "WishList".
+                - Inside the `ul` tag should be a razor foreach loop that will iterate through every `Item` in the provided model
+                - Each iteration should contain an `li` tag that provides the `Item`'s `Descrition` property followed by an `a` tag.
+                - The `a` tag should have the attributes `asp-action` set to "delete", `asp-controller` set to "item", and `asp-route-id` set to the `Item`'s `Id` property with the text of the `a` tag being "delete".
+                - In Home's Index view add an `a` tag with attributes `asp-action` set to "index" and `asp-controller` set to "Item" with text "View WishList".
+        - [ ] Create a "CreatePartial" Partial View
+            - Create a new partial view "CreatePartial" in the "WishList/Views/Item" folder.
+                - This view should use a model of `Item`.
+                - This view should contain an `h3` tag saying "Add Item to WishList".
+                - This view should have a `form` tag containing the attributes `asp-action` set to "create" and `asp-controller` set to "item".
+                - Inside the `form` tag create an `input` tag with the attribute `asp-for` set to "description"".
+                - Inside the `form` tag create a `span` tag with the attribute `asp-validation-for` set to "descrption".
+                - Inside the `form` tag create an `button` tag with the attribute `type` set to "submit" and text "Add Item".
+                - In the Item's Index view add the "CreatePartial" view above the `ul` tag.
 
 ## What Now?
 
