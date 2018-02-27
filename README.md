@@ -41,9 +41,9 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
 			- In the `Configure` method call `UseMVC` on `app`.
 				- Provide `UseMVC` with default Controller/Action/Id Route (defaulting to the "Home" controller and "Index" action and `Id` being optional) (_Note_ : The `HomeController` doesn't exist yet, we'll make it soon)
 		- [ ] In the `Startup.cs` file add support for developer exception pages and user friendly error pages.
-			- In the `Configure` method before `UseMVC` setup a condition to check if `env` is set to "Developement" using `IsDevelopement`.
-				- If Development call `UseBrowserLink`, `UseDeveloperExceptionPage`, and `UseDatabaseErrorPage` on `app` to get better detailed error pages.
-				- If Not Development call `UseExceptionHandler` on `app` and point it to "Home/Error" to provide a generic "An Error Has Occurred" page. (_Note_ : the Error page doesn't exist yet, we'll make it soon)
+			- In the `Configure` method before `UseMVC` update the condition that checks if `env` is set to "Developement" using `IsDevelopement`.
+				- If Development it should call `UseBrowserLink`, `UseDeveloperExceptionPage`, and `UseDatabaseErrorPage` on `app` to get better detailed error pages.
+				- Otherwise it should call `UseExceptionHandler` on `app` and point it to "Home/Error" to provide a generic "An Error Has Occurred" page. (_Note_ : the Error page doesn't exist yet, we'll make it soon)
 	- [ ] Create `HomeController` and "Home"" Views
 		- [ ] Create a Generic Welcome View
 			- Create a new view "Index" in the "WishList/Views/Home" folder. (you will need to make some of these folders)
