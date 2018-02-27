@@ -59,7 +59,7 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
 			- Create a new Action `Error` in the `HomeController`
 				- This action should have a return type of `ActionResult`.
 				- The return statement should return the "Error" view.
-    - [ ] Impliment Basic WishList Functionality
+    - [ ] Create Item Models With EntityFramework Support
         - [ ] Add `EntityFramework` support
             - Create a class `ApplicationDbContext` that inherits the `DbContext` class in the "WishList/Data" folder. (you will need to make some of these folders) (_Note_ : `DbContext` exists in the `Microsoft.EntityFrameWorkCore` namespace)
                 - Create the required constructor that accepts a parameter of type `DbContextOptions<ApplicationDbContext>` named `options`.
@@ -73,6 +73,7 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
                 - This class should contain a public property `Description` of type `string`.
                 - The `Description` property should have attributes of `Required` and `StringLength(50)`. (_Note_ : You'll need to add a using statement for `System.CompenentModel.DataAnnotations`.)
 			- In the `ApplicationDbContext` class add new public property `Items` of type `DbSet<Item>`.
+    - [ ] Create `ItemController` and it's Actions
 		- [ ] Create a new Controller `ItemController` inside the `Controllers` folder
             - Create a private readonly property `_context` of type `ApplicationDbContext`. (Do not instantiate it at this time)
             - Create a new constructor that accepts a parameter of type `ApplicationDbContext`
@@ -90,6 +91,7 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
                 - This action should return a type of `ActionResult`.
                 - This action should remove the `Item` with the matching `Id` property from `_context.Items`. (_Note_ : Don't forget to `SaveChanges`!)
                 - This action should redirect to the `Index` action.
+    - [ ] Create "Item" Views
         - [ ] Add support for Tag Helpers and Layout
             - Create a New View "_ViewImports" in the "WishList/Views" folder.
                 - This view should contain `@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers`.
