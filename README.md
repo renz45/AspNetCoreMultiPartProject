@@ -37,13 +37,13 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
 - [ ] Creating ASP.NET Core Application from scratch
 	- [ ] Add Middleware/Configuration to `Startup.cs`
 		- [ ] In the `Startup.cs` file add support for the MVC middleware and configure it to have a default route.
-			- In the `ConfigureServices` method add `AddMVC` to add support for MVC middleware.
-			- In the `Configure` method add `UseMVC`.
+			- In the `ConfigureServices` method call `AddMVC` on `services` to add support for MVC middleware.
+			- In the `Configure` method call `UseMVC` on `app`.
 				- Provide `UseMVC` with default Controller/Action/Id Route (defaulting to the "Home" controller and "Index" action and `Id` being optional) (_Note_ : The `HomeController` doesn't exist yet, we'll make it soon)
 		- [ ] In the `Startup.cs` file add support for developer exception pages and user friendly error pages.
 			- In the `Configure` method before `UseMVC` setup a condition to check if `env` is set to "Developement" using `IsDevelopement`.
-				- If Development add `UseBrowserLink`, `UseDeveloperExceptionPage`, and `UseDatabaseErrorPage` to get better detailed error pages.
-				- If Not Development Add `UseExceptionHandler` and point it to "Home/Error" to provide a generic "An Error Has Occurred" page. (_Note_ : the Error page doesn't exist yet, we'll make it soon)
+				- If Development call `UseBrowserLink`, `UseDeveloperExceptionPage`, and `UseDatabaseErrorPage` on `app` to get better detailed error pages.
+				- If Not Development call `UseExceptionHandler` on `app` and point it to "Home/Error" to provide a generic "An Error Has Occurred" page. (_Note_ : the Error page doesn't exist yet, we'll make it soon)
 	- [ ] Create `HomeController` and "Home"" Views
 		- [ ] Create a Generic Welcome View
 			- Create a new view "Index" in the "WishList/Views/Home" folder. (you will need to make some of these folders)
@@ -65,7 +65,7 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
                 - Create the required constructor that accepts a parameter of type `DbContextOptions<ApplicationDbContext>` named `options`.
                 - Add the base Invocation after the constructor signature using `: base(options)`.
             - In the `Startup` class's `Configure` method add `EntityFramework` support.
-                - Use `AddDbContext<ApplicationDbContext>` to point `EntityFramework` to the application's `DbContext`.
+                - Call `AddDbContext<ApplicationDbContext>` on `services` to point `EntityFramework` to the application's `DbContext`.
                 - Provide the option `UseInMemoryDatabase` to use an in memory database for the time being. 
 		- [ ] Create the `Item` model.
 			- Create a new class `Item` in the "WishList/Models" folder (You might need to create this folder)
