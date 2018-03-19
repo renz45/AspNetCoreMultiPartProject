@@ -41,7 +41,7 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
 			- In the `Configure` method remove the `app.Run` entirely and with a call to `UseMvcWithDefaultRoute` on `app`.
 		- [ ] In the `Startup.cs` file add support for developer exception pages and user friendly error pages.
 			- In the `Configure` method before `UseMvcWithDefaultRoute` update the condition that checks if `env` is set to "Development" using `IsDevelopement`.
-				- If Development it should call `UseBrowserLink`, `UseDeveloperExceptionPage`, and `UseDatabaseErrorPage` on `app` to get better detailed error pages.
+				- If Development it should call `UseDeveloperExceptionPage` on `app` to get better detailed error pages.
 				- Otherwise it should call `UseExceptionHandler` on `app` and provide it the string "Home/Error" to provide a generic "An Error Has Occurred" page. (_Note_ : the Error page doesn't exist yet, we'll make it soon)
 	- [ ] Create "Home Views and `HomeController`
 		- [ ] Create a Generic Welcome View
