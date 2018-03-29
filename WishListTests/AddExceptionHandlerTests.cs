@@ -1,7 +1,5 @@
 ﻿using Xunit;
-using WishList;
-using WishListTests.Helpers;
-using Microsoft.Extensions.DependencyInjection;
+using System.IO;
 
 namespace WishListTests
 {
@@ -10,13 +8,27 @@ namespace WishListTests
         [Fact]
         public void UseDeveloperExceptionPageTest()
         {
-            Assert.True(true == true);
+            var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Startup.cs";
+            string file;
+            using (StreamReader streamReader = new StreamReader(filePath))
+            {
+                file = streamReader.ReadToEnd();
+            }
+
+            Assert.True(file.Contains("app.UserDeveloperExceptionPage();"), "`Startup.cs`'s `Configure` did not contain a call to `UseDeveloperExceptionPage`.");
         }
 
         [Fact]
         public void UseExceptionHandlerTest()
         {
-            Assert.True(true == true);
+            var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Startup.cs";
+            string file;
+            using (StreamReader streamReader = new StreamReader(filePath))
+            {
+                file = streamReader.ReadToEnd();
+            }
+
+            Assert.True(file.Contains(@"app.UseExceptionHandler;(""Home\Error"")"), "`Startup.cs`'s `Configure` did not contain a call to `UseDeveloperExceptionPage`.");
         }
     }
 }
