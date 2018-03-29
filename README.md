@@ -49,7 +49,7 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
             - The "Index" View should contain an `h1` tag welcoming the user.
 		- [ ] Create a Generic Error View
 			- Create a new view "Error" in the "WishList/Views/Shared" folder. (you will need to make some of these folders)
-				- This view should contain a `p` tag saying "An Error has occurred. Please Try again."
+				- This view should contain a `p` tag saying "An error has occurred. Please try again."
 		- [ ] Create the `HomeController`
 			- Create a new Controller "HomeController" inside the "Controllers" folder (you might need to create this folder)
 			- Create a new Action `Index` in the `HomeController`
