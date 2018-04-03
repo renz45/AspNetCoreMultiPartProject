@@ -63,9 +63,9 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
             - Create a class `ApplicationDbContext` that inherits the `DbContext` class in the "WishList/Data" folder. (you will need to make some of these folders) (_Note_ : `DbContext` exists in the `Microsoft.EntityFrameWorkCore` namespace)
                 - Create the required constructor that accepts a parameter of type `DbContextOptions<ApplicationDbContext>` named `options`.
                 - Add the base Invocation after the constructor signature using `: base(options)`.
-            - In the `Startup` class's `Configure` method add `EntityFramework` support.
-                - Call `AddDbContext<ApplicationDbContext>` on `services` to point `EntityFramework` to the application's `DbContext`.
-                - Provide the option `UseInMemoryDatabase` with an argument of "default" to use an in memory database for the time being. 
+        - [ ] In the `Startup` class's `Configure` method add `EntityFramework` support.
+            - Call `AddDbContext<ApplicationDbContext>` on `services` to point `EntityFramework` to the application's `DbContext`.
+            - Provide the option `UseInMemoryDatabase` with an argument of "default" to use an in memory database for the time being. 
 		- [ ] Create the `Item` model.
 			- Create a new class `Item` in the "WishList/Models" folder (You might need to create this folder)
 				- This class should contain a public property `Id` of type `int`.
