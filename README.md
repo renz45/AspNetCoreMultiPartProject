@@ -78,19 +78,19 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
                 - This view should contain `@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers`.
         - [ ] Create a New View "_ViewStart" in the "WishList/Views" folder.
             - This view should contain `@{ Layout = "_Layout"; }`. (_Note_ : We've provided a very basic layout for you, this layout contains some basic CSS and Jquery.)
-        - [ ] Create a "CreatePartial" Partial View
-            - Create a new partial view "CreatePartial" in the "WishList/Views/Item" folder.
+        - [ ] Create a "_Create" Partial View
+            - Create a new partial view "_Create" in the "WishList/Views/Item" folder.
                 - This view should use a model of `Item`.
-                - This view should contain an `h3` tag saying "Add Item to WishList".
-                - This view should have a `form` tag containing the attributes `asp-action` set to "create" and `asp-controller` set to "item".
-                - Inside the `form` tag create an `input` tag with the attribute `asp-for` set to "description"".
+                - This view should contain an `h3` tag saying "Add item to wishlist".
+                - This view should have a `form` tag containing the attribute `asp-action` set to "create".
+                - Inside the `form` tag create an `input` tag with the attribute `asp-for` set to "description".
                 - Inside the `form` tag create a `span` tag with the attribute `asp-validation-for` set to "descrption".
                 - Inside the `form` tag create an `button` tag with the attribute `type` set to "submit" and text "Add Item".
 		- [ ] Create the Item's "Index" View
             - Create a new View "Index" in the "WishList/Views/Item" folder (You will need to make some of these folders)
                 - This view should use a model of `List<Item>`.
                 - This view should have an `h1` tag containing "WishList".
-				- After the `h1` tag call the "CreatePartial" view .
+				- After the `h1` tag call the "_Create" partial view .
                 - Inside the `ul` tag should be a razor foreach loop that will iterate through each `item` of type `Item` in `Model`
                 - Each iteration should contain an `li` tag that provides the `Item`'s `Descrition` property followed by an `a` tag.
                 - The `a` tag should have the attributes `asp-action` set to "delete", `asp-controller` set to "item", and `asp-route-id` set to the `Item`'s `Id` property with the text of the `a` tag being "delete".
