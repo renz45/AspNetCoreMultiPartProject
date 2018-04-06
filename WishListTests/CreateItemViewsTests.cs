@@ -68,7 +68,7 @@ namespace WishListTests
             pattern = @"<\s*?[aA](\s*?.*)\s*?>\s*?delete";
             rgx = new Regex(pattern);
             var aTag = rgx.Match(file).Value;
-            Assert.True(aTag.Contains(@"asp-action=""delete""") && aTag.Contains(@"asp-route-id=""@item.Id"""),"`Index.cshtml` contains an `a` tag, but that `a` tag does not appear to have both tag helpers `asp-action` set to 'delete' and `asp-route-id` set to `@item.Id`");
+            Assert.True(aTag.Contains(@"asp-action=""delete""") && aTag.Contains(@"asp-route-id=""@item.Id"""), "`Index.cshtml` contains an `a` tag, but that `a` tag does not appear to have both tag helpers `asp-action` set to 'delete' and `asp-route-id` set to `@item.Id`");
         }
 
         [Fact(DisplayName = "Create Create Partial View @create-create-partial-view")]
@@ -103,4 +103,5 @@ namespace WishListTests
             rgx = new Regex(pattern);
             Assert.True(rgx.IsMatch(file), "`_Create.cshtml` was found, but does not appear to contain a `form` containing an `button` tag with an attribute `type` set to 'submit'.");
         }
+    }
 }

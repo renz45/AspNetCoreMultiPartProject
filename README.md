@@ -102,7 +102,7 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
                 - This constructor should set `_context` to the provided `ApplicationDbContext` parameter.
 			- Create a new Action `Index` in the `ItemController`.
 				- This action should have a return type of `IActionResult`.
-                - This action should return the item's "Index" view. (_Note_ : The item's Index view doesn't exist yet, we'll make it soon.)
+                - This action should return the item's "Index" view.
                 - This action should provide the "Index" view with a model of type `List<Item>` that contains all items in `_context.Items`.
 			- Create a new Action `Create` in the `ItemController`.
                 - This action should accept a parameter of type `Item`.

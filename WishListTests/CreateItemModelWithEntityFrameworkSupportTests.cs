@@ -7,7 +7,7 @@ using Xunit;
 
 namespace WishListTests
 {
-    public class CreateItemModelWithEntityFrameworkSupport
+    public class CreateItemModelWithEntityFrameworkSupportTests
     {
         [Fact(DisplayName = "Create Item Model @create-item-model")]
         public void CreateItemModelTest()
