@@ -58,16 +58,23 @@ namespace WishListTests
                               where type.Name == "HomeController"
                               select type).FirstOrDefault();
 
+            Assert.True(controllerType != null, "`HomeController.cs` was found, but does not appear to contain a `public` `HomeController` class.");
+            Assert.True(controllerType.BaseType == typeof(Controller),"`HomeController` was found, but is not inheritting the `Controller` class. (you will need a using directive for `Microsoft.AspNetCore.Mvc`)");
+
             var controller = Activator.CreateInstance(controllerType);
             var method = controllerType.GetMethod("Index");
+            Assert.True(method != null, "`HomeController` was found, but does not appeart to contain a `public` `Index` method.");
+            Assert.True(method.ReturnType == typeof(IActionResult),"`HomeController.Index` was found, but did not have a return type of `IActionResult`.");
+
             var result = (ViewResult)method.Invoke(controller,null);
-            Assert.True(result.GetType() == typeof(ViewResult), "`HomeController.Index` did not return the correct type of `ActionResult`.");
-            Assert.True(result.ViewName == "Index", "`HomeController.Index` returned a `ViewResult` but it was not the `Index` view.");
+            Assert.True(result.ViewName == "Index", "`HomeController.Index` did not explicitly return the `Index` view.");
 
             method = controllerType.GetMethod("Error");
+            Assert.True(method != null, "`HomeController` was found, but does not appeart to contain a `public` `Error` method.");
+            Assert.True(method.ReturnType == typeof(IActionResult), "`HomeController.Error` was found, but did not have a return type of `IActionResult`.");
+
             result = (ViewResult)method.Invoke(controller, null);
-            Assert.True(result.GetType() == typeof(ViewResult), "`HomeController.Error` did not return the correct type of `ActionResult`.");
-            Assert.True(result.ViewName == "Index", "`HomeController.Error` returned a `ViewResult` but it was not the `Error` view.");
+            Assert.True(result.ViewName == "Error", "`HomeController.Error` did not explicitly return the `Error` view.");
         }
     }
 }
