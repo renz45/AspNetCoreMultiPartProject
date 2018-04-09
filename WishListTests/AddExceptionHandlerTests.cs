@@ -10,7 +10,7 @@ namespace WishListTests
         {
             var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Startup.cs";
             string file;
-            using (StreamReader streamReader = new StreamReader(filePath))
+            using (var streamReader = new StreamReader(filePath))
             {
                 file = streamReader.ReadToEnd();
             }
@@ -23,7 +23,7 @@ namespace WishListTests
         {
             var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Startup.cs";
             string file;
-            using (StreamReader streamReader = new StreamReader(filePath))
+            using (var streamReader = new StreamReader(filePath))
             {
                 file = streamReader.ReadToEnd();
             }

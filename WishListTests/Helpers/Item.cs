@@ -1,0 +1,8 @@
+﻿namespace WishListTests.Helpers
+{
+    public class Item
+    {
+        public int Id { get; set; }
+        public string Description { get; set; }
+    }
+}

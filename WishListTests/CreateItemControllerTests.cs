@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.IO;
-using System.Text.RegularExpressions;
 using Xunit;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
+using WishListTests.Helpers;
 
 namespace WishListTests
 {
@@ -35,6 +36,11 @@ namespace WishListTests
 
             Assert.True(applicationDbContextType != null, "class `ApplicationDbContext` was not found, this class should already exist in the `Data` folder, if you recieve this you may have accidentally deleted or renamed it.");
 
+            var efServiceProvider = new ServiceCollection().AddEntityFrameworkInMemoryDatabase().BuildServiceProvider();
+            var services = new ServiceCollection();
+            services.AddDbContext<ApplicationDbContext>(e => e.UseInMemoryDatabase("Test").UseInternalServiceProvider(efServiceProvider));
+            var serviceProvider = services.BuildServiceProvider();
+
             var itemType = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
                             from type in assembly.GetTypes()
                             where type.FullName == "WishList.Models.Item"
@@ -45,10 +51,8 @@ namespace WishListTests
             var constructor = controllerType.GetConstructor(new Type[] { applicationDbContextType });
 
             Assert.True(constructor != null, "`ItemController` was found, but did not contain a constructor accepting a parameter of type `ApplicationDbContext`.");
-            var options = new DbContextOptionsBuilder().UseInMemoryDatabase("Test").Options;
-            
-            var dbContext = Activator.CreateInstance(applicationDbContextType, new object[] { options });
 
+            var dbContext = serviceProvider.GetRequiredService(applicationDbContextType);
             var controller = Activator.CreateInstance(controllerType, dbContext);
             var contextProperty = controllerType.GetProperty("_context",BindingFlags.Instance|BindingFlags.NonPublic);
             Assert.True(contextProperty != null, "`ItemController` was found, but does not appeart to contain a `private` property `_context` of type `ApplicationDbConetext`.");
