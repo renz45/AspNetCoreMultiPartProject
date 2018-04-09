@@ -88,15 +88,15 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
 		- [ ] Create the Item's "Index" View
             - Create a new View "Index" in the "WishList/Views/Item" folder (You will need to make some of these folders)
                 - This view should use a model of `List<Item>`. (You'll need to use the full `WishList.Models.Item` not just `Item`)
-                - This view should have an `h1` tag containing "WishList".
-				- After the `h1` tag call the "_Create" partial view .
+                - This view should have an `h1` tag containing "Wishlist".
+				- After the `h1` tag add an `a` tag with an attribute `asp-action` with a value of `create` with the text "Add Item".
                 - Inside the `ul` tag should be a razor foreach loop that will iterate through each `item` of type `Item` in `Model`
                 - Each iteration should contain an `li` tag that provides the `Item`'s `Descrition` property followed by an `a` tag.
                 - The `a` tag should have the attributes `asp-action` set to "delete", `asp-controller` set to "item", and `asp-route-id` set to the `Item`'s `Id` property with the text of the `a` tag being "delete".
-        - [ ] In Home's Index view add an `a` tag with attributes `asp-action` set to "Index" and `asp-controller` set to "Item" with text "View wishList".
+        - [ ] In Home's Index view add an `a` tag with attributes `asp-action` set to "Index" and `asp-controller` set to "Item" with text "View wishlist".
     - [ ] Create `ItemController` and it's Actions
 		- [ ] Create a new Controller `ItemController` inside the `Controllers` folder that inherits the `Controller` class from `Microsoft.AspNetCore.Mvc
-            - Create a private readonly property `_context` of type `ApplicationDbContext`. (Do not instantiate it at this time)
+            - Create a `private` `readonly` field `_context` of type `ApplicationDbContext`. (Do not instantiate it at this time)
             - Create a new constructor that accepts a parameter of type `ApplicationDbContext`
                 - This constructor should set `_context` to the provided `ApplicationDbContext` parameter.
 			- Create a new Action `Index` in the `ItemController`.
@@ -104,6 +104,11 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
                 - This action should return the item's "Index" view. (Explicitly specify the view in the return statement)
                 - This action should provide the "Index" view with a model of type `List<Item>` that contains all items in `_context.Items`.
 			- Create a new Action `Create` in the `ItemController`.
+				- This action should have an attribute `HttpGet`.
+				- This action should have a return type of `IActionResult`.
+				- This action should return the "Create" view. (Explicitly specify the view in the return statement)
+			- Create a new Action `Create` in the `ItemController`.
+				- This action should have an attribute `HttpPost`.
                 - This action should accept a parameter of type `Item`.
                 - This action should have a return type of `IActionResult`.
                 - This action should add the provided `Item` to `_context.Items` (_Note_ : Don't forget to `SaveChanges`!)

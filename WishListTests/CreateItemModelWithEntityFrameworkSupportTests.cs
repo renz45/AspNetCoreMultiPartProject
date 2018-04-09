@@ -39,7 +39,7 @@ namespace WishListTests
 
             var applicationDbContext = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
                                   from type in assembly.GetTypes()
-                                  where type.Name == "ApplicationDbContext"
+                                  where type.FullName == "WishList.Data.ApplicationDbContext"
                                   select type).FirstOrDefault();
 
             Assert.True(applicationDbContext != null, "`ApplicationDbContext` class was not found, ensure `ApplicationDbContext.cs` contains a `public` class `AplicationDbContext`.");
@@ -73,7 +73,7 @@ namespace WishListTests
 
             var applicationDbContext = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
                                         from type in assembly.GetTypes()
-                                        where type.Name == "ApplicationDbContext"
+                                        where type.FullName == "WishList.Data.ApplicationDbContext"
                                         select type).FirstOrDefault();
 
             Assert.True(applicationDbContext != null, "`ApplicationDbContext` class was not found, ensure `ApplicationDbContext.cs` contains a `public` class `AplicationDbContext`.");

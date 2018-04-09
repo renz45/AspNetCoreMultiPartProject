@@ -71,13 +71,13 @@ namespace WishListTests
             Assert.True(aTag.Contains(@"asp-action=""delete""") && aTag.Contains(@"asp-route-id=""@item.Id"""), "`Index.cshtml` contains an `a` tag, but that `a` tag does not appear to have both tag helpers `asp-action` set to 'delete' and `asp-route-id` set to `@item.Id`");
         }
 
-        [Fact(DisplayName = "Create Create Partial View @create-create-partial-view")]
+        [Fact(DisplayName = "Create Create View @create-create-view")]
         public void CreateCreatePartialView()
         {
             // Get appropriate path to file for the current operating system
-            var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Views" + Path.DirectorySeparatorChar + "Item" + Path.DirectorySeparatorChar + "_Create.cshtml";
+            var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Views" + Path.DirectorySeparatorChar + "Item" + Path.DirectorySeparatorChar + "Create.cshtml";
             // Assert Index.cshtml is in the Views/Home folder
-            Assert.True(File.Exists(filePath), "`_Create.cshtml` was not found in the `Views" + Path.DirectorySeparatorChar + "Item` folder.");
+            Assert.True(File.Exists(filePath), "`Create.cshtml` was not found in the `Views" + Path.DirectorySeparatorChar + "Item` folder.");
 
             string file;
             using (var streamReader = new StreamReader(filePath))
@@ -86,22 +86,22 @@ namespace WishListTests
             }
             var pattern = @"@model\s*WishList[.]Models[.]Item";
             var rgx = new Regex(pattern);
-            Assert.True(rgx.IsMatch(file), "`_Create.cshtml` was found, but does not appear to have a model of `Item`.");
+            Assert.True(rgx.IsMatch(file), "`Create.cshtml` was found, but does not appear to have a model of `Item`.");
             pattern = @"<\s*?[hH]3\s*?>\s*?Add item to wishlist\s*?</\s*?[hH]3\s*?>";
             rgx = new Regex(pattern);
-            Assert.True(rgx.IsMatch(file), "`_Create.cshtml` was found, but does not appear to have a include an opening and closing `h3` tag with a contents of 'Add item to wishlist'");
-            pattern = @"<\s*?form\s*asp-action\s*?=\s*?""create""\s*?>(\s*?.*)*?</\s*?form\s*?>";
+            Assert.True(rgx.IsMatch(file), "`Create.cshtml` was found, but does not appear to have a include an opening and closing `h3` tag with a contents of 'Add item to wishlist'");
+            pattern = @"<\s*?form\s*asp-action\s*?=\s*?""[cC]reate""\s*?>(\s*?.*)*?</\s*?form\s*?>";
             rgx = new Regex(pattern);
-            Assert.True(rgx.IsMatch(file), "`_Create.cshtml` was found, but does not appear to contain a `form` with the attribute `asp-action` set to 'create'.");
+            Assert.True(rgx.IsMatch(file), "`Create.cshtml` was found, but does not appear to contain a `form` with the attribute `asp-action` set to 'create'.");
             pattern = @"<\s*?form(\s*?.*)>(\s*?.*)<\s*?input\s*asp-for\s*?=\s*?""Description""\s*?([/]>|>[/]s*?<[/]\s*?input\s*?>)(\s*?.*)*?<[/]\s*?form\s*?>";
             rgx = new Regex(pattern);
-            Assert.True(rgx.IsMatch(file), "`_Create.cshtml` was found, but does not appear to contain a `form` containing an `input` tag with an attribute `asp-for` set to 'Description'.");
-            pattern = @"<\s*?form\s*?.*\s*?>\s*?.*\s*?<\s*?span\s*?asp-validation-for\s*?=\s*?""Description""\s*?([/]>|>\s*?<[/]\s*?span\s*?>)(\s*?.*)*<[/]\s*?form\s*?>";
+            Assert.True(rgx.IsMatch(file), "`Create.cshtml` was found, but does not appear to contain a `form` containing an `input` tag with an attribute `asp-for` set to 'Description'.");
+            pattern = @"<\s*?form\s*?.*\s*?>\s*?.*\s*?<\s*?span\s*?asp-validation-for\s*?=\s*?""Description""\s*?>\s*?<[/]\s*?span\s*?>(\s*?.*)*<[/]\s*?form\s*?>";
             rgx = new Regex(pattern);
-            Assert.True(rgx.IsMatch(file), "`_Create.cshtml` was found, but does not appear to contain a `form` containing an `span` tag with an attribute `asp-validation-for` set to 'Description'.");
-            pattern = @"<\s*?button.*type\s*?=\s*?""submit"".*>\s*?Add Item\s*?<[/]\s*?button\s*?>\s*?</\s*?form\s*?>";
+            Assert.True(rgx.IsMatch(file), "`Create.cshtml` was found, but does not appear to contain a `form` containing an `span` tag with an attribute `asp-validation-for` set to 'Description'.");
+            pattern = @"<\s*?button\s*type\s*?=\s*?""submit"".*>\s*?Add item\s*?<[/]\s*?button\s*?>\s*?</\s*?form\s*?>";
             rgx = new Regex(pattern);
-            Assert.True(rgx.IsMatch(file), "`_Create.cshtml` was found, but does not appear to contain a `form` containing an `button` tag with an attribute `type` set to 'submit'.");
+            Assert.True(rgx.IsMatch(file), "`Create.cshtml` was found, but does not appear to contain a `form` containing an `button` tag with an attribute `type` set to 'submit' with the text 'Add item'.");
         }
 
         [Fact(DisplayName = "Add Item Link To Home @add-item-link-to-home")]
@@ -117,7 +117,7 @@ namespace WishListTests
             {
                 file = streamReader.ReadToEnd();
             }
-            var pattern = @"<\s*?a\s*asp-action\s*?=\s*?""Index""\s*asp-controller\s*?=\s*?""Item""\s*?>\s*?View wishlist\s*?<[/]\s*?a\s*?>";
+            var pattern = @"<\s*?a\s*asp-action\s*?=\s*?""[iI]ndex""\s*asp-controller\s*?=\s*?""[iI]tem""\s*?>\s*?View wishlist\s*?<[/]\s*?a\s*?>";
             var rgx = new Regex(pattern);
             Assert.True(rgx.IsMatch(file), "`Index.cshtml` was found, but does not appear to contain link to the `ItemController.Index` action. (use the `asp-action` and `asp-controller` tag helpers)");
         }
