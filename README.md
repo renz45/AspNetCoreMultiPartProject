@@ -37,83 +37,86 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
 - [ ] Creating ASP.NET Core Application from scratch
 	- [ ] Add Middleware/Configuration to `Startup.cs`
 		- [ ] In the `Startup.cs` file add support for the MVC middleware and configure it to have a default route.
-			- In the `ConfigureServices` method call `AddMVC` on `services` to add support for MVC middleware.
-			- In the `Configure` method replace the `app.Run` call with a call to `UseMVC` on `app`.
-				- In `UseMVC`'s arguments call `MapRoute` with a name of "default" and a template of "{controller=Home}/{action=Index}/{id?}")" (_Note_ : The `HomeController` doesn't exist yet, we'll make it soon)
+			- In the `ConfigureServices` method call `AddMvc` on `services` to add support for MVC middleware.
+			- In the `Configure` method remove the `app.Run` entirely and with a call to `UseMvcWithDefaultRoute` on `app`.
 		- [ ] In the `Startup.cs` file add support for developer exception pages and user friendly error pages.
-			- In the `Configure` method before `UseMVC` update the condition that checks if `env` is set to "Developement" using `IsDevelopement`.
-				- If Development it should call `UseBrowserLink`, `UseDeveloperExceptionPage`, and `UseDatabaseErrorPage` on `app` to get better detailed error pages.
-				- Otherwise it should call `UseExceptionHandler` on `app` and point it to "Home/Error" to provide a generic "An Error Has Occurred" page. (_Note_ : the Error page doesn't exist yet, we'll make it soon)
-	- [ ] Create `HomeController` and "Home"" Views
+			- In the `Configure` method before `UseMvcWithDefaultRoute` update the condition that checks if `env` is set to "Development" using `IsDevelopement`.
+				- If Development it should call `UseDeveloperExceptionPage` on `app` to get better detailed error pages.
+				- Otherwise it should call `UseExceptionHandler` on `app` and provide it the string "/Home/Error" to provide a generic "An Error Has Occurred" page. (_Note_ : the Error page doesn't exist yet, we'll make it soon)
+	- [ ] Create "Home Views and `HomeController`
 		- [ ] Create a Generic Welcome View
 			- Create a new view "Index" in the "WishList/Views/Home" folder. (you will need to make some of these folders)
-            - The "Index" View should contain an `H1` tag welcoming the user.
+            - The "Index" View should contain an `h1` tag welcoming the user.
 		- [ ] Create a Generic Error View
 			- Create a new view "Error" in the "WishList/Views/Shared" folder. (you will need to make some of these folders)
-				- This view should contain a `p` tag sayisc "An Error has occurred. Please Try again."
+				- This view should contain a `p` tag saying "An error has occurred. Please try again."
 		- [ ] Create the `HomeController`
 			- Create a new Controller "HomeController" inside the "Controllers" folder (you might need to create this folder)
+				- This should inherrit the `Controller` class (you will need to add a using directive for the `Microsoft.AspNetCore.Mvc` namespace)
 			- Create a new Action `Index` in the `HomeController`
-				- This action should have a return type of `ActionResult`.
-				- The return statement should return the "Index" view.
+				- This action should have a return type of `IActionResult`.
+				- The return statement should return the "Index" view (specify the "Index" view in your return statement).
 			- Create a new Action `Error` in the `HomeController`
-				- This action should have a return type of `ActionResult`.
-				- The return statement should return the "Error" view.
+				- This action should have a return type of `IActionResult`.
+				- The return statement should return the "Error" view (specify the "Error" view in your return statement).
     - [ ] Create Item Models With EntityFramework Support
         - [ ] Add `EntityFramework` support
             - Create a class `ApplicationDbContext` that inherits the `DbContext` class in the "WishList/Data" folder. (you will need to make some of these folders) (_Note_ : `DbContext` exists in the `Microsoft.EntityFrameWorkCore` namespace)
-                - Create the required constructor that accepts a parameter of type `DbContextOptions<ApplicationDbContext>` named `options`.
-                - Add the base Invocation after the constructor signature using `: base(options)`.
-            - In the `Startup` class's `Configure` method add `EntityFramework` support.
-                - Call `AddDbContext<ApplicationDbContext>` on `services` to point `EntityFramework` to the application's `DbContext`.
-                - Provide the option `UseInMemoryDatabase` to use an in memory database for the time being. 
+			- Add a Constructor that accepts a parameter of type `DbContextOptions options` and Invokes the base method as well (you can do this by adding `: base(options)` after the method signature)
+        - [ ] In the `Startup` class's `Configure` method add `EntityFramework` support.
+            - Call `AddDbContext<ApplicationDbContext>` on `services` with the argument `options => options.UseInMemoryDatabase("WishList")` to point `EntityFramework` to the application's `DbContext`.
 		- [ ] Create the `Item` model.
 			- Create a new class `Item` in the "WishList/Models" folder (You might need to create this folder)
 				- This class should contain a public property `Id` of type `int`.
                 - This class should contain a public property `Description` of type `string`.
-                - The `Description` property should have attributes of `Required` and `StringLength(50)`. (_Note_ : You'll need to add a using statement for `System.CompenentModel.DataAnnotations`.)
+                - The `Description` property should have attributes of `Required` and `StringLength(50)`. (_Note_ : You'll need to add a using statement for `System.ComponentModel.DataAnnotations`.)
 			- In the `ApplicationDbContext` class add new public property `Items` of type `DbSet<Item>`.
-    - [ ] Create `ItemController` and it's Actions
-		- [ ] Create a new Controller `ItemController` inside the `Controllers` folder
-            - Create a private readonly property `_context` of type `ApplicationDbContext`. (Do not instantiate it at this time)
-            - Create a new constructor that accepts a parameter of type `ApplicationDbContext`
-                - This constructor should set `_context` to the provided `ApplicationDbContext` parameter.
-			- Create a new Action `Index` in the `ItemController`.
-				- This action should have a return type of `ActionResult`.
-                - This action should return the item's "Index" view. (_Note_ : The item's Index view doesn't exist yet, we'll make it soon.)
-                - This action should provide the "Index" view with a model of type `List<Item>` that contains all items in `_context.Items`.
-			- Create a new Action `Create` in the `ItemController`.
-                - This action should accept a parameter of type `Item`.
-                - This action should have a return type of `ActionResult`.
-                - This action should add the provided `Item` to `_context.Items` (_Note_ : Don't forget to `SaveChanges`!)
-				- This action should redirect to the `Index` action.
-			- Create a new Action `Delete` in the `ItemController`.
-                - This action should return a type of `ActionResult`.
-                - This action should remove the `Item` with the matching `Id` property from `_context.Items`. (_Note_ : Don't forget to `SaveChanges`!)
-                - This action should redirect to the `Index` action.
     - [ ] Create "Item" Views
         - [ ] Add support for Tag Helpers and Layout
             - Create a New View "_ViewImports" in the "WishList/Views" folder.
                 - This view should contain `@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers`.
-            - Create a New View "_ViewStart" in the "WishList/Views" folder.
-                - This view should contain `@{ Layout = "_Layout"; }`. (_Note_ : We've provided a very basic layout for you, this layout contains some basic CSS and Jquery.)
-		- [ ] Create the Item's "Index" View
-			- Create a new View "Index" in the "WishList/Views/Item" folder (You will need to make some of these folders)
-				- This view should use a model of `List<Item>`.
-                - This view should have an `h1` tag containing "WishList".
-                - Inside the `ul` tag should be a razor foreach loop that will iterate through every `Item` in the provided model
-                - Each iteration should contain an `li` tag that provides the `Item`'s `Descrition` property followed by an `a` tag.
-                - The `a` tag should have the attributes `asp-action` set to "delete", `asp-controller` set to "item", and `asp-route-id` set to the `Item`'s `Id` property with the text of the `a` tag being "delete".
-                - In Home's Index view add an `a` tag with attributes `asp-action` set to "index" and `asp-controller` set to "Item" with text "View WishList".
-        - [ ] Create a "CreatePartial" Partial View
-            - Create a new partial view "CreatePartial" in the "WishList/Views/Item" folder.
-                - This view should use a model of `Item`.
-                - This view should contain an `h3` tag saying "Add Item to WishList".
-                - This view should have a `form` tag containing the attributes `asp-action` set to "create" and `asp-controller` set to "item".
-                - Inside the `form` tag create an `input` tag with the attribute `asp-for` set to "description"".
+        - [ ] Create a New View "_ViewStart" in the "WishList/Views" folder.
+            - This view should contain `@{ Layout = "_Layout"; }`. (_Note_ : We've provided a very basic layout for you, this layout contains some basic CSS and Jquery.)
+        - [ ] Create a "Create" View
+            - Create a new view "Create" in the "WishList/Views/Item" folder.
+                - This view should use a model of `Item`. (You'll need to use the full `WishList.Models.Item` not just `Item`)
+                - This view should contain an `h3` tag saying "Add item to wishlist".
+                - This view should have a `form` tag containing the attribute `asp-action` set to "create".
+                - Inside the `form` tag create an `input` tag with the attribute `asp-for` set to "description".
                 - Inside the `form` tag create a `span` tag with the attribute `asp-validation-for` set to "descrption".
                 - Inside the `form` tag create an `button` tag with the attribute `type` set to "submit" and text "Add Item".
-                - In the Item's Index view add the "CreatePartial" view above the `ul` tag.
+		- [ ] Create the Item's "Index" View
+            - Create a new View "Index" in the "WishList/Views/Item" folder (You will need to make some of these folders)
+                - This view should use a model of `List<Item>`. (You'll need to use the full `WishList.Models.Item` not just `Item`)
+                - This view should have an `h1` tag containing "Wishlist".
+				- After the `h1` tag add an `a` tag with an attribute `asp-action` with a value of `create` with the text "Add item".
+                - Inside the `ul` tag should be a razor foreach loop that will iterate through each `item` of type `Item` in `Model`
+                - Each iteration should contain an `li` tag that provides the `Item`'s `Descrition` property followed by an `a` tag.
+                - The `a` tag should have the attributes `asp-action` set to "delete", `asp-controller` set to "item", and `asp-route-id` set to the `Item`'s `Id` property with the text of the `a` tag being "delete".
+        - [ ] In Home's Index view add an `a` tag with attributes `asp-action` set to "Index" and `asp-controller` set to "Item" with text "View wishlist".
+    - [ ] Create `ItemController` and it's Actions
+		- [ ] Create a new Controller `ItemController` inside the `Controllers` folder that inherits the `Controller` class from `Microsoft.AspNetCore.Mvc
+            - Create a `private` `readonly` field `_context` of type `ApplicationDbContext`. (Do not instantiate it at this time)
+            - Create a new constructor that accepts a parameter of type `ApplicationDbContext`
+                - This constructor should set `_context` to the provided `ApplicationDbContext` parameter.
+			- Create a new Action `Index` in the `ItemController`.
+				- This action should have a return type of `IActionResult`.
+                - This action should return the item's "Index" view. (Explicitly specify the view in the return statement)
+                - This action should provide the "Index" view with a model of type `List<Item>` that contains all items in `_context.Items`.
+			- Create a new Action `Create` in the `ItemController`.
+				- This action should have an attribute `HttpGet`.
+				- This action should have a return type of `IActionResult`.
+				- This action should return the "Create" view. (Explicitly specify the view in the return statement)
+			- Create a new Action `Create` in the `ItemController`.
+				- This action should have an attribute `HttpPost`.
+                - This action should accept a parameter of type `Item`.
+                - This action should have a return type of `IActionResult`.
+                - This action should add the provided `Item` to `_context.Items` (_Note_ : Don't forget to `SaveChanges`!)
+				- This action should redirect to the `Index` action.
+			- Create a new Action `Delete` in the `ItemController`.
+                - This action should return a type of `IActionResult`.
+                - This action should remove the `Item` with the matching `Id` property from `_context.Items`. (_Note_ : Don't forget to `SaveChanges`!)
+                - This action should redirect to the `Index` action.
 
 ## What Now?
 
