@@ -18,11 +18,11 @@ namespace WishListTests
             Assert.True(File.Exists(filePath), "`Index.cshtml` was not found in the `Views" + Path.DirectorySeparatorChar + "Home` folder.");
 
             string file;
-            using (StreamReader streamReader = new StreamReader(filePath))
+            using (var streamReader = new StreamReader(filePath))
             {
                 file = streamReader.ReadToEnd();
             }
-            string pattern = @"<\s?[hH]1\s?>\s?.*<\/\s?[hH]1\s?>";
+            var pattern = @"<\s?[hH]1\s?>\s?.*<\/\s?[hH]1\s?>";
             var rgx = new Regex(pattern);
             Assert.True(rgx.IsMatch(file), "`Index.cshtml` was found, but does not appear to contain both an openning and closing `h1` tag.");
         }
@@ -36,11 +36,11 @@ namespace WishListTests
             Assert.True(File.Exists(filePath), "`Error.cshtml` was not found in the `Views" + Path.DirectorySeparatorChar + "Shared` folder.");
 
             string file;
-            using (StreamReader streamReader = new StreamReader(filePath))
+            using (var streamReader = new StreamReader(filePath))
             {
                 file = streamReader.ReadToEnd();
             }
-            string pattern = @"<\s?[pP]\s?>\s?(?i:An Error has occurred. Please Try again.)\s?<\/\s?[pP]\s?>";
+            var pattern = @"<\s?[pP]\s?>\s?(?i:An Error has occurred. Please Try again.)\s?<\/\s?[pP]\s?>";
             var rgx = new Regex(pattern);
             Assert.True(rgx.IsMatch(file), "`Error.cshtml` was found, but does not appear to contain both an openning and closing `p` tag containing the message 'An error has occurred. Please try again.'.");
         }

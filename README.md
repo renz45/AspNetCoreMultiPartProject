@@ -42,7 +42,7 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
 		- [ ] In the `Startup.cs` file add support for developer exception pages and user friendly error pages.
 			- In the `Configure` method before `UseMvcWithDefaultRoute` update the condition that checks if `env` is set to "Development" using `IsDevelopement`.
 				- If Development it should call `UseDeveloperExceptionPage` on `app` to get better detailed error pages.
-				- Otherwise it should call `UseExceptionHandler` on `app` and provide it the string "Home/Error" to provide a generic "An Error Has Occurred" page. (_Note_ : the Error page doesn't exist yet, we'll make it soon)
+				- Otherwise it should call `UseExceptionHandler` on `app` and provide it the string "/Home/Error" to provide a generic "An Error Has Occurred" page. (_Note_ : the Error page doesn't exist yet, we'll make it soon)
 	- [ ] Create "Home Views and `HomeController`
 		- [ ] Create a Generic Welcome View
 			- Create a new view "Index" in the "WishList/Views/Home" folder. (you will need to make some of these folders)
@@ -77,8 +77,8 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
                 - This view should contain `@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers`.
         - [ ] Create a New View "_ViewStart" in the "WishList/Views" folder.
             - This view should contain `@{ Layout = "_Layout"; }`. (_Note_ : We've provided a very basic layout for you, this layout contains some basic CSS and Jquery.)
-        - [ ] Create a "_Create" Partial View
-            - Create a new partial view "_Create" in the "WishList/Views/Item" folder.
+        - [ ] Create a "Create" View
+            - Create a new view "Create" in the "WishList/Views/Item" folder.
                 - This view should use a model of `Item`. (You'll need to use the full `WishList.Models.Item` not just `Item`)
                 - This view should contain an `h3` tag saying "Add item to wishlist".
                 - This view should have a `form` tag containing the attribute `asp-action` set to "create".
@@ -89,7 +89,7 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
             - Create a new View "Index" in the "WishList/Views/Item" folder (You will need to make some of these folders)
                 - This view should use a model of `List<Item>`. (You'll need to use the full `WishList.Models.Item` not just `Item`)
                 - This view should have an `h1` tag containing "Wishlist".
-				- After the `h1` tag add an `a` tag with an attribute `asp-action` with a value of `create` with the text "Add Item".
+				- After the `h1` tag add an `a` tag with an attribute `asp-action` with a value of `create` with the text "Add item".
                 - Inside the `ul` tag should be a razor foreach loop that will iterate through each `item` of type `Item` in `Model`
                 - Each iteration should contain an `li` tag that provides the `Item`'s `Descrition` property followed by an `a` tag.
                 - The `a` tag should have the attributes `asp-action` set to "delete", `asp-controller` set to "item", and `asp-route-id` set to the `Item`'s `Id` property with the text of the `a` tag being "delete".

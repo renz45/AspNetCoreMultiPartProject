@@ -28,7 +28,7 @@ namespace WishListTests
                 file = streamReader.ReadToEnd();
             }
 
-            Assert.True(file.Contains(@"app.UseExceptionHandler(""Home/Error"")"), "`Startup.cs`'s `Configure` did not contain a call to `UseExceptionHandler` that redirects to the `Home.Error` action.");
+            Assert.True(file.Contains(@"app.UseExceptionHandler(""/Home/Error"")"), "`Startup.cs`'s `Configure` did not contain a call to `UseExceptionHandler` that redirects to the `Home.Error` action.");
         }
     }
 }

@@ -72,7 +72,7 @@ namespace WishListTests
         }
 
         [Fact(DisplayName = "Create Create View @create-create-view")]
-        public void CreateCreatePartialView()
+        public void CreateCreateView()
         {
             // Get appropriate path to file for the current operating system
             var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Views" + Path.DirectorySeparatorChar + "Item" + Path.DirectorySeparatorChar + "Create.cshtml";
@@ -93,10 +93,10 @@ namespace WishListTests
             pattern = @"<\s*?form\s*asp-action\s*?=\s*?""[cC]reate""\s*?>(\s*?.*)*?</\s*?form\s*?>";
             rgx = new Regex(pattern);
             Assert.True(rgx.IsMatch(file), "`Create.cshtml` was found, but does not appear to contain a `form` with the attribute `asp-action` set to 'create'.");
-            pattern = @"<\s*?form(\s*?.*)>(\s*?.*)<\s*?input\s*asp-for\s*?=\s*?""Description""\s*?([/]>|>[/]s*?<[/]\s*?input\s*?>)(\s*?.*)*?<[/]\s*?form\s*?>";
+            pattern = @"<\s*?form(\s*?.*)>(\s*?.*)<\s*?input\s*asp-for\s*?=\s*?""[dD]escription""\s*?([/]>|>[/]s*?<[/]\s*?input\s*?>)(\s*?.*)*?<[/]\s*?form\s*?>";
             rgx = new Regex(pattern);
             Assert.True(rgx.IsMatch(file), "`Create.cshtml` was found, but does not appear to contain a `form` containing an `input` tag with an attribute `asp-for` set to 'Description'.");
-            pattern = @"<\s*?form\s*?.*\s*?>\s*?.*\s*?<\s*?span\s*?asp-validation-for\s*?=\s*?""Description""\s*?>\s*?<[/]\s*?span\s*?>(\s*?.*)*<[/]\s*?form\s*?>";
+            pattern = @"<\s*?form\s*?.*\s*?>\s*?.*\s*?<\s*?span\s*?asp-validation-for\s*?=\s*?""[dD]escription""\s*?>\s*?<[/]\s*?span\s*?>(\s*?.*)*<[/]\s*?form\s*?>";
             rgx = new Regex(pattern);
             Assert.True(rgx.IsMatch(file), "`Create.cshtml` was found, but does not appear to contain a `form` containing an `span` tag with an attribute `asp-validation-for` set to 'Description'.");
             pattern = @"<\s*?button\s*type\s*?=\s*?""submit"".*>\s*?Add item\s*?<[/]\s*?button\s*?>\s*?</\s*?form\s*?>";
