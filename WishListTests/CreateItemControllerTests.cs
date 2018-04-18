@@ -1,15 +1,26 @@
 ﻿using System;
 using System.Linq;
 using System.IO;
-using System.Text.RegularExpressions;
 using Xunit;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using System.Reflection;
+using Microsoft.AspNetCore.TestHost;
+using System.Net.Http;
+using Microsoft.AspNetCore.Hosting;
+using System.Text.RegularExpressions;
 
 namespace WishListTests
 {
     public class CreateItemControllerTests
     {
+        private readonly TestServer _server;
+        private readonly HttpClient _client;
+        public CreateItemControllerTests()
+        {
+            _server = new TestServer(new WebHostBuilder().UseStartup<WishList.Startup>().UseContentRoot(".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList"));
+            _client = _server.CreateClient();
+        }
+
         [Fact(DisplayName = "Create ItemController @create-itemcontroller")]
         public void CreateItemControllerTest()
         {
@@ -19,11 +30,12 @@ namespace WishListTests
             Assert.True(File.Exists(filePath), "`ItemController.cs` was not found in the `Controllers` folder.");
 
             var controllerType = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                              from type in assembly.GetTypes()
-                              where type.Name == "ItemController"
-                              select type).FirstOrDefault();
+                                  from type in assembly.GetTypes()
+                                  where type.Name == "ItemController"
+                                  select type).FirstOrDefault();
 
             Assert.True(controllerType != null, "`ItemController.cs` was found, but it appears it does not contain a `public` class `ItemController`.");
+            Assert.True(controllerType.BaseType == typeof(Controller), "`ItemController` was found, but does not appear to inherit the `Controller` class from the `Microsoft.AspNetCore.Mvc` namespace.");
 
             var applicationDbContextType = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
                                             from type in assembly.GetTypes()
@@ -32,29 +44,23 @@ namespace WishListTests
 
             Assert.True(applicationDbContextType != null, "class `ApplicationDbContext` was not found, this class should already exist in the `Data` folder, if you recieve this you may have accidentally deleted or renamed it.");
 
-            var itemType = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                                            from type in assembly.GetTypes()
-                                            where type.Name == "Item"
-                                            select type).FirstOrDefault();
+            // Verify ItemController contains a private property _context of type ApplicationDbContext
+            var contextField = controllerType.GetField("_context",BindingFlags.Instance|BindingFlags.NonPublic);
+            Assert.True(contextField != null, "`ItemController` was found, but does not appear to contain a `private` `readonly` field `_context` of type `ApplicationDbConetext`.");
 
-            Assert.True(itemType != null, "class `Item` was not found, this class should already exist in the `Models` folder, if you recieve this you may have accidentally deleted or renamed it.");
-            var item = Activator.CreateInstance(itemType);
-            itemType.GetProperty("Description").SetValue(item,"Example Item");
-
+            // Verify ItemController contains a constructor has a parameter of type ApplicationDbContext
             var constructor = controllerType.GetConstructor(new Type[] { applicationDbContextType });
-
             Assert.True(constructor != null, "`ItemController` was found, but did not contain a constructor accepting a parameter of type `ApplicationDbContext`.");
 
-            var dbContext = Activator.CreateInstance(applicationDbContextType);
-            var list = new List<object>
+            // Verify _context is set by the constructor's parameter
+            string file;
+            using (var streamReader = new StreamReader(filePath))
             {
-                item
-            };
-            applicationDbContextType.GetProperty("Items").SetValue(dbContext, list);
-
-            var controller = Activator.CreateInstance(controllerType, dbContext);
-            var actual = (List<object>)controllerType.GetProperty("_context").GetValue(controller);
-            Assert.True(actual.Count == 1, "`ItemController` was found, but didn't set a `private` property `_context` of type `ApplicationDbContext` to the `ApplicationDbContext` provided to it`s constructor.");
+                file = streamReader.ReadToEnd();
+            }
+            var pattern = @"public\s*ItemController\s*?[(]\s*?ApplicationDbContext\s*context\s*?[)]\s*?{\s*?_context\s*?=\s*?context\s*?;\s*?}";
+            var rgx = new Regex(pattern);
+            Assert.True(rgx.IsMatch(file),"`ItemController`'s constructor did not set the `_context` property to the provided `ApplicationDbContext` parameter.");
         }
 
         [Fact(DisplayName = "Create Item Index Action @create-item-index-action")]
@@ -72,42 +78,25 @@ namespace WishListTests
 
             Assert.True(controllerType != null, "`ItemController.cs` was found, but it appears it does not contain a `public` class `ItemController`.");
 
-            var applicationDbContextType = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                                            from type in assembly.GetTypes()
-                                            where type.Name == "ApplicationDbContext"
-                                            select type).FirstOrDefault();
-
-            Assert.True(applicationDbContextType != null, "class `ApplicationDbContext` was not found, this class should already exist in the `Data` folder, if you recieve this you may have accidentally deleted or renamed it.");
-
-            var itemType = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                            from type in assembly.GetTypes()
-                            where type.Name == "Item"
-                            select type).FirstOrDefault();
-
-            Assert.True(itemType != null, "class `Item` was not found, this class should already exist in the `Models` folder, if you recieve this you may have accidentally deleted or renamed it.");
-            var item = Activator.CreateInstance(itemType);
-            itemType.GetProperty("Description").SetValue(item, "Example Item");
-
-            var constructor = controllerType.GetConstructor(new Type[] { applicationDbContextType });
-
-            Assert.True(constructor != null, "`ItemController` was found, but did not contain a constructor accepting a parameter of type `ApplicationDbContext`.");
-
-            var dbContext = Activator.CreateInstance(applicationDbContextType);
-            var list = new List<object>
-            {
-                item
-            };
-            applicationDbContextType.GetProperty("Items").SetValue(dbContext, list);
-
-            var controller = Activator.CreateInstance(controllerType, dbContext);
+            // Verify Index Action Exists
             var method = controllerType.GetMethod("Index");
-            var result = (ViewResult)method.Invoke(controller, null);
-            Assert.True(result.ViewName == "Index", @"`ItemController.Index` did not return the `Item\Index` view.");
-            Assert.True(((List<object>)result.Model).Count == 1,"`ItemController` returned the correct view, but the model was not set to a List of all of the items in `_context.Items`.");
+            Assert.True(method != null, "`ItemController` was found, but does not appear to contain an action `Index` with a return type of `IActionResult`.");
+
+            // Verify Index has the correct return type
+            Assert.True(method.ReturnType == typeof(IActionResult),"`ItemController`'s `Index` action was found, but didn't have a return type of `IActionResult`.");
+
+            string file;
+            using (var streamReader = new StreamReader(filePath))
+            {
+                file = streamReader.ReadToEnd();
+            }
+            var pattern = @"public\s*IActionResult\s*Index\s*?[(]\s*?[)]\s*?{\s*?(var|List<Item>).*=\s*?_context.Items(;\s*?return\s*View[(](""Index"",)?.*[.]ToList[(]\s*?[)]\s*?[)];|[.]ToList[(]\s*?[)]\s*?;\s*?return\s*View\s*?[(]\s*?(""Index"",)?.*[)];)\s*?}";
+            var rgx = new Regex(pattern);
+            Assert.True(rgx.IsMatch(file), "`ItemController`'s `Index` action does not appear to be getting all `Item`s from `_context.Items` converting it to type `List<Item>` and returning it as the model for the 'Index' view.");
         }
 
-        [Fact(DisplayName = "Create Item Create Action @create-item-create-action")]
-        public void CreateItemCreateActionTest()
+        [Fact(DisplayName = "Create Item Create HttpGet Action @create-item-create-httpget-action")]
+        public void CreateItemCreateHttpGetActionTest()
         {
             // Get appropriate path to file for the current operating system
             var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Controllers" + Path.DirectorySeparatorChar + "ItemController.cs";
@@ -121,32 +110,68 @@ namespace WishListTests
 
             Assert.True(controllerType != null, "`ItemController.cs` was found, but it appears it does not contain a `public` class `ItemController`.");
 
-            var applicationDbContextType = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                                            from type in assembly.GetTypes()
-                                            where type.Name == "ApplicationDbContext"
-                                            select type).FirstOrDefault();
+            // Verify Create Action Exists
+            var method = controllerType.GetMethod("Create", new Type[] { });
+            Assert.True(method != null, "`ItemController` was found, but does not appear to contain an action `Create` with a return type of `IActionResult`.");
 
-            Assert.True(applicationDbContextType != null, "class `ApplicationDbContext` was not found, this class should already exist in the `Data` folder, if you recieve this you may have accidentally deleted or renamed it.");
+            // Verify Create has the correct return type
+            Assert.True(method.ReturnType == typeof(IActionResult), "`ItemController`'s `Create` action was found, but didn't have a return type of `IActionResult`.");
+
+            // Verify Create has the HttpGet attribute
+            Assert.True(method.CustomAttributes.Where(e => e.AttributeType == typeof(HttpGetAttribute)) != null, "`ItemController`'s `Create` action was found, but does not appear to have the `HttpGet` attribute.");
+
+            // Verify Create returns the "Create" view
+            string file;
+            using (var streamReader = new StreamReader(filePath))
+            {
+                file = streamReader.ReadToEnd();
+            }
+            var pattern = @"[[]HttpGet[\]]\s*?public\s*IActionResult\s*Create\s*?[(]\s*?[)]\s*?{\s*?return\s*View[(]\s*?(""Create"")?\s*?[)];\s*?}";
+            var rgx = new Regex(pattern);
+            Assert.True(rgx.IsMatch(file), "`ItemController`'s `Create` (Get) action does not appear to be returning the 'Create' view.");
+        }
+
+        [Fact(DisplayName = "Create Item Create HttpPost Action @create-item-create-httppost-action")]
+        public void CreateItemCreateHttpPostActionTest()
+        {
+            // Get appropriate path to file for the current operating system
+            var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Controllers" + Path.DirectorySeparatorChar + "ItemController.cs";
+            // Assert Index.cshtml is in the Views/Home folder
+            Assert.True(File.Exists(filePath), "`ItemController.cs` was not found in the `Controllers` folder.");
+
+            var controllerType = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                                  from type in assembly.GetTypes()
+                                  where type.Name == "ItemController"
+                                  select type).FirstOrDefault();
+
+            Assert.True(controllerType != null, "`ItemController.cs` was found, but it appears it does not contain a `public` class `ItemController`.");
 
             var itemType = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
                             from type in assembly.GetTypes()
-                            where type.Name == "Item"
+                            where type.FullName == "WishList.Models.Item"
                             select type).FirstOrDefault();
 
-            Assert.True(itemType != null, "class `Item` was not found, this class should already exist in the `Models` folder, if you recieve this you may have accidentally deleted or renamed it.");
-            var item = Activator.CreateInstance(itemType);
-            itemType.GetProperty("Description").SetValue(item, "Example Item");
+            Assert.True(itemType != null, "`item` was not found, `Item` should have been created in a previous step, have you accidently deleted or renamed it?");
 
-            var constructor = controllerType.GetConstructor(new Type[] { applicationDbContextType });
+            // Verify Create Action Exists
+            var method = controllerType.GetMethod("Create", new Type[] { itemType });
+            Assert.True(method != null, "`ItemController` was found, but does not appear to contain an action `Create` that accepts a parameter of type `Item` with a return type of `IActionResult`.");
 
-            Assert.True(constructor != null, "`ItemController` was found, but did not contain a constructor accepting a parameter of type `ApplicationDbContext`.");
+            // Verify Create has the correct return type
+            Assert.True(method.ReturnType == typeof(IActionResult), "`ItemController`'s `Create` action was found, but didn't have a return type of `IActionResult`.");
 
-            var dbContext = Activator.CreateInstance(applicationDbContextType);
-            var controller = Activator.CreateInstance(controllerType, dbContext);
-            var method = controllerType.GetMethod("Create");
-            var result = (RedirectToActionResult)method.Invoke(controller, new object[] { item });
-            Assert.True(result.ActionName == "Index", @"`ItemController.Create` did not redirect to the `Item\Index` action.");
-            Assert.True(((List<object>)applicationDbContextType.GetProperty("items").GetValue(dbContext)).Count == 1, "`ItemController` redirected to the correct action, but didn't add the provided `Item` to `_context.Items` (did you remember to call `SaveChanges`?).");
+            // Verify Create adds the provided Item to dbContext.Items
+            Assert.True(method.CustomAttributes.Where(e => e.AttributeType == typeof(HttpPostAttribute)) != null, "`ItemController`'s `Create` action was found, but does not appear to have the `HttpPost` attribute.");
+
+            // Verify Create redirects to action to the Index action
+            string file;
+            using (var streamReader = new StreamReader(filePath))
+            {
+                file = streamReader.ReadToEnd();
+            }
+            var pattern = @"[[]HttpPost[\]]\s*?public\s* IActionResult\s* Create\s*?[(]\s*?Item\s* item\s*?[)]\s*?{\s*?_context.Items.Add[(]\s*?item\s*?[)];\s*?_context.SaveChanges[(]\s*?[)];\s*?return\s* RedirectToAction[(]\s*?""Index""\s*?(,""Item"")?[)];\s*?}";
+            var rgx = new Regex(pattern);
+            Assert.True(rgx.IsMatch(file), "`ItemController`'s `Create` (Post) action does not appear to be adding the provided `item` to `_context.Items`, `SaveChanges`, and then redirecting to the `Item`'s `Index` action.");
         }
 
         [Fact(DisplayName = "Create Item Delete Action @create-item-delete-action")]
@@ -164,39 +189,27 @@ namespace WishListTests
 
             Assert.True(controllerType != null, "`ItemController.cs` was found, but it appears it does not contain a `public` class `ItemController`.");
 
-            var applicationDbContextType = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                                            from type in assembly.GetTypes()
-                                            where type.Name == "ApplicationDbContext"
-                                            select type).FirstOrDefault();
-
-            Assert.True(applicationDbContextType != null, "class `ApplicationDbContext` was not found, this class should already exist in the `Data` folder, if you recieve this you may have accidentally deleted or renamed it.");
-
-            var itemType = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                            from type in assembly.GetTypes()
-                            where type.Name == "Item"
-                            select type).FirstOrDefault();
-
-            Assert.True(itemType != null, "class `Item` was not found, this class should already exist in the `Models` folder, if you recieve this you may have accidentally deleted or renamed it.");
-            var item = Activator.CreateInstance(itemType);
-            itemType.GetProperty("Description").SetValue(item, "Example Item");
-            itemType.GetProperty("Id").SetValue(item, 1);
-
-            var constructor = controllerType.GetConstructor(new Type[] { applicationDbContextType });
-
-            Assert.True(constructor != null, "`ItemController` was found, but did not contain a constructor accepting a parameter of type `ApplicationDbContext`.");
-
-            var dbContext = Activator.CreateInstance(applicationDbContextType);
-            var list = new List<object>
-            {
-                item
-            };
-            applicationDbContextType.GetProperty("Items").SetValue(dbContext, list);
-
-            var controller = Activator.CreateInstance(controllerType, dbContext);
+            // Verify Delete Action Exists
             var method = controllerType.GetMethod("Delete");
-            var result = (RedirectToActionResult)method.Invoke(controller, new object[] { 1 });
-            Assert.True(result.ActionName == "Index", @"`ItemController.Delete` did not redirect to the `Item\Index` action.");
-            Assert.True(((List<object>)applicationDbContextType.GetProperty("items").GetValue(dbContext)).Count == 0, "`ItemController.Delete` redirected to the correct action, but did not remove the matching `Item` from `_context.Items` (did you remember to call `SaveChanges`?).");
+            Assert.True(method != null, "`ItemController` was found, but does not appear to contain an action `Delete` that accepts a parameter of type `int` with a return type of `IActionResult`.");
+
+            // Verify Delete has the correct return type
+            Assert.True(method.ReturnType == typeof(IActionResult), "`ItemController`'s `Delete` action was found, but didn't have a return type of `IActionResult`.");
+
+            // Verify Delete has the HttpPost attribute
+            Assert.True(method.CustomAttributes.Where(e => e.AttributeType == typeof(HttpPostAttribute)) != null, "`ItemController`'s `Create` action was found, but does not appear to have the `HttpPost` attribute.");
+
+            // Verify Delete removes the matching item from dbContext.Items
+            // Verify Delete redirects to action to the Index action
+
+            string file;
+            using (var streamReader = new StreamReader(filePath))
+            {
+                file = streamReader.ReadToEnd();
+            }
+            var pattern = @"public\s*IActionResult\s*Delete\s*?[(]\s*?int\s*id\s*?[)]\s*?{\s*?.*_context.Items.FirstOrDefault[(].*[.]Id\s*?==\s*?id\s*?[)];\s*?_context.Remove[(]\s*?.*\s*?[)];\s*?_context.SaveChanges[(]\s*?[)];\s*?return\s*RedirectToAction[(]""Index""(,\s*?""Item"")?[)];\s*?}";
+            var rgx = new Regex(pattern);
+            Assert.True(rgx.IsMatch(file), "`ItemController`'s `Delete` action does not appear to be removing the `Item` with the matching `Id` to the one provided from `_context.Items`, `SaveChanges`, and then redirecting to the `Item`'s `Index` action.");
         }
     }
 }

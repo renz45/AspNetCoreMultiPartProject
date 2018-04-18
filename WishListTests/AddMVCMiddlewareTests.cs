@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Xunit;
 
 namespace WishListTests
@@ -11,12 +10,12 @@ namespace WishListTests
         {
             var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Startup.cs";
             string file;
-            using (StreamReader streamReader = new StreamReader(filePath))
+            using (var streamReader = new StreamReader(filePath))
             {
                 file = streamReader.ReadToEnd();
             }
 
-            Assert.True(file.Contains("app.AddMvc();"), "`Startup.cs`'s `ConfigureServices` did not contain a call to `AddMvc`.");
+            Assert.True(file.Contains("services.AddMvc();"), "`Startup.cs`'s `ConfigureServices` did not contain a call to `AddMvc`.");
         }
 
         [Fact]
@@ -24,12 +23,12 @@ namespace WishListTests
         {
             var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Startup.cs";
             string file;
-            using (StreamReader streamReader = new StreamReader(filePath))
+            using (var streamReader = new StreamReader(filePath))
             {
                 file = streamReader.ReadToEnd();
             }
 
-            Assert.True(file.Contains("services.UseMvcWithDefaultRoute();"), "`Startup.cs`'s `Configure` did not contain a call to `UseMvcWithDefaultRoute`.");
+            Assert.True(file.Contains("app.UseMvcWithDefaultRoute();"), "`Startup.cs`'s `Configure` did not contain a call to `UseMvcWithDefaultRoute`.");
         }
     }
 }
