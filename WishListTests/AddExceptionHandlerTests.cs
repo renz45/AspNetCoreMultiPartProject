@@ -1,7 +1,5 @@
 ﻿using Xunit;
-using WishList;
-using WishListTests.Helpers;
-using Microsoft.Extensions.DependencyInjection;
+using System.IO;
 
 namespace WishListTests
 {
@@ -10,21 +8,27 @@ namespace WishListTests
         [Fact]
         public void UseDeveloperExceptionPageTest()
         {
-            var services = new ServiceCollection();
-            var app = new TestApplicationBuilder();
-            ((TestServiceProvider)app.ApplicationServices).Populate(services);
-            var host = new TestHostingEnvironment() { EnvironmentName = "Development" };
-            var startup = new Startup();
-            startup.ConfigureServices(((TestServiceProvider)app.ApplicationServices).Services);
-            startup.Configure(app, host);
+            var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Startup.cs";
+            string file;
+            using (var streamReader = new StreamReader(filePath))
+            {
+                file = streamReader.ReadToEnd();
+            }
 
-            Assert.True(true == false);
+            Assert.True(file.Contains("app.UseDeveloperExceptionPage();"), "`Startup.cs`'s `Configure` did not contain a call to `UseDeveloperExceptionPage`.");
         }
 
         [Fact]
         public void UseExceptionHandlerTest()
         {
-            
+            var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Startup.cs";
+            string file;
+            using (var streamReader = new StreamReader(filePath))
+            {
+                file = streamReader.ReadToEnd();
+            }
+
+            Assert.True(file.Contains(@"app.UseExceptionHandler(""/Home/Error"")"), "`Startup.cs`'s `Configure` did not contain a call to `UseExceptionHandler` that redirects to the `Home.Error` action.");
         }
     }
 }
