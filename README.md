@@ -38,15 +38,15 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
 	- [ ] Add Middleware/Configuration to `Startup.cs`
 		- [ ] In the `Startup.cs` file add support for the MVC middleware and configure it to have a default route.
 			- In the `ConfigureServices` method call `AddMvc` on `services` to add support for MVC middleware.
-			- In the `Configure` method remove the `app.Run` entirely and with a call to `UseMvcWithDefaultRoute` on `app`.
+			- In the `Configure` method remove the `app.Run` entirely and replace it with a call to `UseMvcWithDefaultRoute` on `app`.
 		- [ ] In the `Startup.cs` file add support for developer exception pages and user friendly error pages.
-			- In the `Configure` method before `UseMvcWithDefaultRoute` update the condition that checks if `env` is set to "Development" using `IsDevelopement`.
+			- In the `Configure` method before `UseMvcWithDefaultRoute` add a condition that checks if `env` is set to "Development" using `IsDevelopement`.
 				- If Development it should call `UseDeveloperExceptionPage` on `app` to get better detailed error pages.
 				- Otherwise it should call `UseExceptionHandler` on `app` and provide it the string "/Home/Error" to provide a generic "An Error Has Occurred" page. (_Note_ : the Error page doesn't exist yet, we'll make it soon)
 	- [ ] Create "Home Views and `HomeController`
 		- [ ] Create a Generic Welcome View
 			- Create a new view "Index" in the "WishList/Views/Home" folder. (you will need to make some of these folders)
-            - The "Index" View should contain an `h1` tag welcoming the user.
+            - The "Index" View should contain an `h1` tag welcoming the user. (if your IDE creates a starting template for the view, remove the generated content, do this in any tasks require )
 		- [ ] Create a Generic Error View
 			- Create a new view "Error" in the "WishList/Views/Shared" folder. (you will need to make some of these folders)
 				- This view should contain a `p` tag saying "An error has occurred. Please try again."
@@ -59,9 +59,10 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
 			- Create a new Action `Error` in the `HomeController`
 				- This action should have a return type of `IActionResult`.
 				- The return statement should return the "Error" view (specify the "Error" view in your return statement).
+	- Note: The application is now viewable in your browser!
     - [ ] Create Item Models With EntityFramework Support
         - [ ] Add `EntityFramework` support
-            - Create a class `ApplicationDbContext` that inherits the `DbContext` class in the "WishList/Data" folder. (you will need to make some of these folders) (_Note_ : `DbContext` exists in the `Microsoft.EntityFrameWorkCore` namespace)
+            - Create a class `ApplicationDbContext` that inherits the `DbContext` class in the "WishList/Data" folder. (you will need to make some of these folders) (_Note_ : `DbContext` exists in the `Microsoft.EntityFrameworkCore` namespace)
 			- Add a Constructor that accepts a parameter of type `DbContextOptions options` and Invokes the base method as well (you can do this by adding `: base(options)` after the method signature)
         - [ ] In the `Startup` class's `Configure` method add `EntityFramework` support.
             - Call `AddDbContext<ApplicationDbContext>` on `services` with the argument `options => options.UseInMemoryDatabase("WishList")` to point `EntityFramework` to the application's `DbContext`.
