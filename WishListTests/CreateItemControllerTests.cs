@@ -4,23 +4,12 @@ using System.IO;
 using Xunit;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
-using Microsoft.AspNetCore.TestHost;
-using System.Net.Http;
-using Microsoft.AspNetCore.Hosting;
 using System.Text.RegularExpressions;
 
 namespace WishListTests
 {
     public class CreateItemControllerTests
     {
-        private readonly TestServer _server;
-        private readonly HttpClient _client;
-        public CreateItemControllerTests()
-        {
-            _server = new TestServer(new WebHostBuilder().UseStartup<WishList.Startup>().UseContentRoot(".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList"));
-            _client = _server.CreateClient();
-        }
-
         [Fact(DisplayName = "Create ItemController @create-itemcontroller")]
         public void CreateItemControllerTest()
         {
