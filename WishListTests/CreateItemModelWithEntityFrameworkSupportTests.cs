@@ -26,7 +26,7 @@ namespace WishListTests
             var descriptionProperty = itemModel.GetProperty("Description");
             Assert.True(descriptionProperty != null && descriptionProperty.PropertyType == typeof(string), "`Item` class did not contain a `public` `string` property `Description`.");
             Assert.True(descriptionProperty.GetCustomAttributes(typeof(RequiredAttribute), false).FirstOrDefault() != null, "`Item` class's `Description` property didn't have a `Required` attribute. (the `RequiredAttribute` can be found in the `System.ComponentModel.DataAnnotations` namespace)");
-            Assert.True(((MaxLengthAttribute)descriptionProperty.GetCustomAttributes(typeof(MaxLengthAttribute), false)?.FirstOrDefault())?.Length == 50, "`Item` class's `Description` poeprty didn`t have a `MaxLength` attribute of `50`.");
+            Assert.True(((MaxLengthAttribute)descriptionProperty.GetCustomAttributes(typeof(MaxLengthAttribute), false)?.FirstOrDefault())?.Length == 50, "`Item` class's `Description` property didn`t have a `MaxLength` attribute of `50`.");
         }
 
         [Fact(DisplayName = "Add EntityFramework Support @add-entityframework-support")]
