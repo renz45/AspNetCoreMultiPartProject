@@ -44,12 +44,13 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
 				- If Development it should call `UseDeveloperExceptionPage` on `app` to get better detailed error pages.
 				- Otherwise it should call `UseExceptionHandler` on `app` and provide it the string "/Home/Error" to provide a generic "An Error Has Occurred" page. (_Note_ : the Error page doesn't exist yet, we'll make it soon)
 	- [ ] Create Home Views and `HomeController`
-		- [ ] Create a Generic Welcome View
-			- [ ] Create a new view "Index" in the "WishList/Views/Home" folder. (you will need to make some of these folders)
-            - [ ] The "Index" View should contain an `h1` tag welcoming the user. (if your IDE creates a starting template for the view, remove the generated content, do this in any tasks require )
-		- [ ] Create a Generic Error View
-			- [ ] Create a new view "Error" in the "WishList/Views/Shared" folder. (you will need to make some of these folders)
-				- This view should contain a `p` tag saying "An error has occurred. Please try again."
+		- [ ] Create Home Views
+			- [ ] Create a Generic Welcome View
+				- Create a new view "Index" in the "WishList/Views/Home" folder. (you will need to make some of these folders)
+				- The "Index" View should contain an `h1` tag welcoming the user. (if your IDE creates a starting template for the view, remove the generated content, do this in any tasks require )
+			- [ ] Create a Generic Error View
+				- Create a new view "Error" in the "WishList/Views/Shared" folder. (you will need to make some of these folders)
+					- This view should contain a `p` tag saying "An error has occurred. Please try again."
 		- [ ] Create the `HomeController`
 			- [ ] Create a new Controller "HomeController" inside the "Controllers" folder (you might need to create this folder)
 				- This should inherrit the `Controller` class (you will need to add a using directive for the `Microsoft.AspNetCore.Mvc` namespace)
