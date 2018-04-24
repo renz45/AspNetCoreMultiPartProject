@@ -51,7 +51,7 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
 			- [ ] Create a new view "Error" in the "WishList/Views/Shared" folder. (you will need to make some of these folders)
 				- This view should contain a `p` tag saying "An error has occurred. Please try again."
 		- [ ] Create the `HomeController`
-			-  [ ]Create a new Controller "HomeController" inside the "Controllers" folder (you might need to create this folder)
+			- [ ] Create a new Controller "HomeController" inside the "Controllers" folder (you might need to create this folder)
 				- This should inherrit the `Controller` class (you will need to add a using directive for the `Microsoft.AspNetCore.Mvc` namespace)
 			- [ ] Create a new Action `Index` in the `HomeController`
 				- This action should have a return type of `IActionResult`.
