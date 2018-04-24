@@ -43,7 +43,7 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
 			- [ ] In the `Configure` method before `UseMvcWithDefaultRoute` add a condition that checks if `env` is set to "Development" using `IsDevelopement`.
 				- If Development it should call `UseDeveloperExceptionPage` on `app` to get better detailed error pages.
 				- Otherwise it should call `UseExceptionHandler` on `app` and provide it the string "/Home/Error" to provide a generic "An Error Has Occurred" page. (_Note_ : the Error page doesn't exist yet, we'll make it soon)
-	- [ ] Create "Home Views and `HomeController`
+	- [ ] Create Home Views and `HomeController`
 		- [ ] Create a Generic Welcome View
 			- [ ] Create a new view "Index" in the "WishList/Views/Home" folder. (you will need to make some of these folders)
             - [ ] The "Index" View should contain an `h1` tag welcoming the user. (if your IDE creates a starting template for the view, remove the generated content, do this in any tasks require )
