@@ -45,7 +45,7 @@ namespace WishListTests
             Assert.True(rgx.IsMatch(file), "`Error.cshtml` was found, but does not appear to contain both an openning and closing `p` tag containing the message 'An error has occurred. Please try again.'.");
         }
 
-        [Fact]
+        [Fact(DisplayName = "Create the HomeController @create-the-homecontroller")]
         public void CreateHomeControllerTest()
         {
             // Get appropriate path to file for the current operating system

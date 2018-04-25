@@ -61,10 +61,10 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
 				- This action should have a return type of `IActionResult`.
 				- The return statement should return the "Error" view (specify the "Error" view in your return statement).
 	- Note: The application is now viewable in your browser!
-    - [ ] Create Item Models With EntityFramework Support
+    - [ ] Create Item Model With EntityFramework Support
         - [ ] Add `EntityFramework` support
             - [ ] Create a class `ApplicationDbContext` that inherits the `DbContext` class in the "WishList/Data" folder. (you will need to make some of these folders) (_Note_ : `DbContext` exists in the `Microsoft.EntityFrameworkCore` namespace)
-			- [ ] Add a Constructor that accepts a parameter of type `DbContextOptions options` and Invokes the base method as well (you can do this by adding `: base(options)` after the method signature)
+			- [ ] Add a Constructor that accepts a parameter of type `DbContextOptions options` and Invokes the base constructor as well (you can do this by adding `: base(options)` after the method signature)
         - [ ] In the `Startup` class's `ConfigureServices` method add `EntityFramework` support.
             - [ ] Call `AddDbContext<ApplicationDbContext>` on `services` with the argument `options => options.UseInMemoryDatabase("WishList")` to point `EntityFramework` to the application's `DbContext`. (_Note_ : You will need to add a using statement for `WishList.Data`)
 		- [ ] Create the `Item` model.

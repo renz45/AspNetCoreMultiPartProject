@@ -29,7 +29,7 @@ namespace WishListTests
             Assert.True(((MaxLengthAttribute)descriptionProperty.GetCustomAttributes(typeof(MaxLengthAttribute), false)?.FirstOrDefault())?.Length == 50, "`Item` class's `Description` property didn`t have a `MaxLength` attribute of `50`.");
         }
 
-        [Fact(DisplayName = "Add EntityFramework Support @add-entityframework-support")]
+        [Fact(DisplayName = "Create Class ApplicationDbContext @create-class-applicationdbcontext")]
         public void CreateApplicationDbContextTest()
         {
             // Get appropriate path to file for the current operating system
@@ -38,15 +38,37 @@ namespace WishListTests
             Assert.True(File.Exists(filePath), "`ApplicationDbContext.cs` was not found in the `Data` folder.");
 
             var applicationDbContext = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                                  from type in assembly.GetTypes()
-                                  where type.FullName == "WishList.Data.ApplicationDbContext"
-                                  select type).FirstOrDefault();
+                                        from type in assembly.GetTypes()
+                                        where type.FullName == "WishList.Data.ApplicationDbContext"
+                                        select type).FirstOrDefault();
 
             Assert.True(applicationDbContext != null, "`ApplicationDbContext` class was not found, ensure `ApplicationDbContext.cs` contains a `public` class `AplicationDbContext`.");
             Assert.True(applicationDbContext.BaseType == typeof(DbContext), "`ApplicationDbContext` was found, but did not inherrit the `DbContext` class. (this will require a using directive for the `Microsoft.EntityFrameWorkCore` namespace)");
 
             //var constructor = applicationDbContext.GetConstructor(new Type[] { typeof(DbContextOptions) });
             //Assert.True(constructor != null, "`ApplicationDbContext` does not appear to contain a constructor accepting a parameter of type `DbContextOptions<ApplicationDbContext>`");
+        }
+
+        [Fact(DisplayName = "Add Constructor to ApplictionDbContext @add-constructor-to-applicationdbcontext")]
+        public void AddConstructorToApplicationDbContextTest()
+        {
+            // Get appropriate path to file for the current operating system
+            var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Data" + Path.DirectorySeparatorChar + "ApplicationDbContext.cs";
+            // Assert Index.cshtml is in the Views/Home folder
+            Assert.True(File.Exists(filePath), "`ApplicationDbContext.cs` was not found in the `Data` folder.");
+
+            var applicationDbContext = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                                        from type in assembly.GetTypes()
+                                        where type.FullName == "WishList.Data.ApplicationDbContext"
+                                        select type).FirstOrDefault();
+
+            Assert.True(applicationDbContext != null, "`ApplicationDbContext` class was not found, ensure `ApplicationDbContext.cs` contains a `public` class `AplicationDbContext`.");
+            Assert.True(applicationDbContext.BaseType == typeof(DbContext), "`ApplicationDbContext` was found, but did not inherrit the `DbContext` class. (this will require a using directive for the `Microsoft.EntityFrameWorkCore` namespace)");
+
+            var constructor = applicationDbContext.GetConstructor(new Type[] { typeof(DbContextOptions) });
+            Assert.True(constructor != null, "`ApplicationDbContext` does not appear to contain a constructor accepting a parameter of type `DbContextOptions<ApplicationDbContext>`");
+
+            // Verify Base Constructor is Invoked
         }
 
         [Fact(DisplayName = "Configure EntityFramework @configure-entityframework")]
