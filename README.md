@@ -77,8 +77,8 @@ __Note:__ this isn't the only way to accomplish this, however; this is what the 
         - [ ] Add support for Tag Helpers and Layout
             - [ ] Create a New View "_ViewImports" in the "WishList/Views" folder.
                 - This view should contain `@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers`.
-        - [ ] Create a New View "_ViewStart" in the "WishList/Views" folder.
-            - This view should contain `@{ Layout = "_Layout"; }`. (_Note_ : We've provided a very basic layout for you, this layout contains some basic CSS and jQuery.)
+			- [ ] Create a New View "_ViewStart" in the "WishList/Views" folder.
+				- This view should contain `@{ Layout = "_Layout"; }`. (_Note_ : We've provided a very basic layout for you, this layout contains some basic CSS and jQuery.)
         - [ ] Create a "Create" View
             - [ ] Create a new view "Create" in the "WishList/Views/Item" folder.
                 - This view should use a model of `Item`. (You'll need to use the full `WishList.Models.Item` not just `Item`)
