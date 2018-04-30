@@ -5,7 +5,7 @@ namespace WishListTests
 {
     public class AddMVCMiddlewareTests
     {
-        [Fact]
+        [Fact(DisplayName = "Add MVC Middleware to ConfigureServices add-mvc-middleware-to-configureservices")]
         public void AddMVCCallAdded()
         {
             var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Startup.cs";
@@ -18,7 +18,7 @@ namespace WishListTests
             Assert.True(file.Contains("services.AddMvc();"), "`Startup.cs`'s `ConfigureServices` did not contain a call to `AddMvc`.");
         }
 
-        [Fact]
+        [Fact(DisplayName = "Configure MVC Middleware In Configure configure-mvc-middleware-in-configure")]
         public void UseMVCAdded()
         {
             var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Startup.cs";

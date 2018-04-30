@@ -5,7 +5,7 @@ namespace WishListTests
 {
     public class AddExceptionHandlingTests
     {
-        [Fact]
+        [Fact(DisplayName = "Configure Exception Handling @configure-exception-handling")]
         public void UseDeveloperExceptionPageTest()
         {
             var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Startup.cs";
@@ -18,7 +18,7 @@ namespace WishListTests
             Assert.True(file.Contains("app.UseDeveloperExceptionPage();"), "`Startup.cs`'s `Configure` did not contain a call to `UseDeveloperExceptionPage`.");
         }
 
-        [Fact]
+        [Fact(DisplayName = "Configure Exception Handling @configure-exception-handling")]
         public void UseExceptionHandlerTest()
         {
             var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Startup.cs";
